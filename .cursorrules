@@ -1,0 +1,623 @@
+# Comprehensive Cursor Rules (Version 2)
+
+Use TS not JS for all code
+
+
+Use Chain of Verification to guide your inner monologue through a chain of thought where you assess the accuracy, veracity, and completeness of your work. I want to have you double-check everything here and then report to me your findings. Do you still agree or disagree with what you had said previously? Why or why not? What are your final findings? What would you make specific, tangible recommendations that we improve here? Be precise, be specific. Don't skip anything.
+## Output Minimization and Token Efficiency
+
+- Perform all analysis, planning, and intermediate steps silently.
+- Output only final, actionable information or specifically requested details.
+- Operate under a strict token budget (refer to **Token Budget Guidelines** below).
+- Maximize information density: Use concise language, avoid redundancy, prioritize novel, actionable information.
+- Implement 'silent mode' when activated: Output only critical information, decisions, or direct answers. Omit explanations unless requested.
+
+### Token Budget Guidelines
+
+1. **Simple Responses**: Up to **250 tokens**
+   - Brief explanations, simple function definitions, or quick status updates.
+   - *Example*: Defining a utility function or explaining a basic concept.
+
+2. **Medium Complexity Responses**: Up to **750 tokens**
+   - Detailed explanations, class definitions, or component implementations.
+   - *Example*: Creating a React component with state management and basic styling.
+
+3. **Complex Responses**: Up to **1500 tokens**
+   - Comprehensive explanations, multiple related functions/classes, or complex logic implementations.
+   - *Example*: Implementing a data processing algorithm with multiple helper functions.
+
+4. **Extended Responses**: Up to **2500 tokens**
+   - Very complex tasks, full feature implementations, or detailed architectural explanations.
+   - *Example*: Designing and implementing a full authentication system.
+
+#### Usage Guidelines
+
+1. **Start with the simplest response** that adequately addresses the task.
+2. **Break responses** approaching the token limit into multiple parts or create separate documentation.
+3. For responses exceeding **750 tokens**, provide a **brief summary** at the beginning for quick reference.
+4. Use **code comments judiciously** to explain complex logic without inflating the token count unnecessarily.
+5. When providing code examples, focus on the **most critical parts** and use placeholders or comments for standard boilerplate.
+
+#### Monitoring and Adjustment
+
+1. **Regularly review** the effectiveness of these token limits.
+2. **Adjust limits** based on task complexity and observed patterns.
+3. **Implement a dynamic token budget system** that adapts based on the specific task and context.
+
+*Note: These token limits are guidelines. The primary goal is to provide clear, efficient, and effective communication. In cases where exceeding these limits is necessary for comprehensive understanding, prioritize clarity and completeness over strict adherence to token limits.*
+
+
+
+## Project Structure and Organization
+### Directory Structure
+my-library/
+├── src/                      # Source Code
+│   ├── index.ts              # Main entry point
+│   ├── utils/                # Utility functions
+│   ├── lib/                  # Core library modules
+│   ├── actions/              # Server Actions
+│   │   ├── example-action.ts # Example server action
+│   ├── cloud-functions/      # Cloud Function Handlers
+│       ├── netlify/          # Netlify-specific functions
+│       │   ├── example-function.js
+│       ├── aws/              # AWS-specific functions
+│       │   ├── example-handler.js
+│       ├── common/           # Shared logic for cloud functions
+│   ├── edge-functions/       # Edge-Specific Logic
+│       ├── example-edge.js   # Example Edge Function
+├── types/                    # Type Definitions
+│   ├── index.d.ts
+├── tests/                    # Unit and Integration Tests
+│   ├── utils/
+│   ├── lib/
+│   ├── actions/              # Tests for server actions
+│   ├── cloud-functions/      # Tests for cloud functions
+│       ├── netlify/
+│       ├── aws/
+│   ├── edge-functions/       # Tests for edge functions
+│   ├── integration/
+├── dist/                     # Compiled Build Output
+├── examples/                 # Example Code
+│   ├── index.ts              # Example usage
+│   ├── agent.ts              # Example agent implementation
+├── docs/                     # Documentation Files
+│   ├── README.md
+│   ├── deployment.md         # Deployment instructions
+│   ├── server-actions.md     # Server actions guide
+│   ├── cloud-functions.md    # Cloud functions guide
+│   ├── edge-functions.md     # Edge functions guide
+│   ├── errors.md             # Error tracking
+│   ├── assistant_plan.md     # Planning and tracking
+├── public/                   # Static assets
+├── .github/                  # GitHub Actions workflows
+│   └── workflows/
+│       ├── publish.yml
+│       ├── cloud-function-test.yml
+│       ├── edge-function-test.yml
+├── dummyData/                # Mock data for testing
+├── package.json              # npm package metadata
+├── tsconfig.json             # TypeScript configuration
+├── .npmignore
+├── .gitignore
+├── LICENSE
+
+## Key Sections and Examples
+
+### Server Actions
+
+Encapsulate reusable backend logic, decoupled from specific platforms.
+
+Example:
+
+export async function exampleAction(input: any) {
+  // Backend logic here
+  return { success: true, data: input };
+}
+
+### Cloud Functions
+
+Platform-specific handlers for serverless environments.
+
+Netlify Example:
+
+exports.handler = async (event, context) => {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Hello from Netlify Functions!" }),
+  };
+};
+
+AWS Lambda Example:
+
+exports.handler = async (event) => {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: "Hello from AWS Lambda!" }),
+  };
+};
+
+### Edge Functions
+
+Lightweight tasks optimized for latency-sensitive operations.
+
+Example:
+
+export default async (request, context) => {
+  return new Response("Hello from the edge!", {
+    headers: { "X-Custom-Header": "Edge Function Example" },
+  });
+};
+
+### Environment Variable Detection
+
+Detect deployment environments (e.g., serverless, edge).
+
+Example:
+
+if (process.env.NETLIFY) {
+  console.log("Running on Netlify");
+} else if (process.env.AWS_EXECUTION_ENV) {
+  console.log("Running on AWS Lambda");
+}
+
+### npm-Specific Enhancements
+
+package.json Configuration
+
+Include dual-entry points for ESM and CommonJS compatibility.
+
+Example:
+
+{
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --format=cjs --outdir=dist && esbuild src/index.ts --bundle --format=esm --outdir=dist",
+    "test": "jest",
+    "lint": "eslint . --ext .ts",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-repo/my-library.git"
+  }
+}
+
+### README.md
+
+Provide comprehensive usage examples for npm users.
+
+Example:
+
+# My Library
+A modern Node.js library for serverless, edge, and traditional server environments.
+
+### Installation
+```bash
+npm install my-library
+```
+
+### Usage
+
+```typescript
+import { exampleAction } from "my-library";
+
+const result = await exampleAction({ key: "value" });
+console.log(result);
+```
+
+### Features
+	•	Modular architecture
+	•	Lightweight builds
+	•	TypeScript support
+
+---
+
+## Error Handling
+
+Implement robust error handling and logging for all environments.
+
+**Structured Error Example**:
+```typescript
+class CustomError extends Error {
+  constructor(message: string, public code: string) {
+    super(message);
+    this.name = "CustomError";
+  }
+}
+```
+
+### Centralized Logging:
+Integrate with external systems (e.g., CloudWatch, Datadog) for production logging.
+
+### Testing and CI/CD
+
+### Testing Strategy
+	•	Unit Tests: Test core modules and functions.
+	•	Integration Tests: Simulate serverless environments using local emulators.
+	•	Edge Tests: Validate functionality using Netlify CLI or Cloudflare Workers CLI.
+
+### GitHub Actions Workflow
+
+Automate testing and npm publishing.
+
+Example:
+
+name: Publish to npm
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  publish:
+    steps:
+      - run: npm install
+      - run: npm run build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+### Summary
+
+This document is comprehensive and complete, addressing:
+	•	All requirements for an npm library.
+	•	Full compatibility across serverless, traditional server, and edge environments.
+	•	A well-structured and maintainable codebase.
+
+Let me know if further refinements are needed!
+
+
+
+
+
+
+
+
+
+### File Naming
+
+- Use **kebab-case** for all files and folders (e.g., `user-profile.tsx`).
+- Exceptions are allowed when specified.
+
+### Import Conventions
+
+- Use `@` to import from the project root 
+
+### Environment Variables
+
+- Store all sensitive information (e.g., API keys, credentials) in **environment variables**.
+- Use a `.env.local` file for local development, and ensure it is listed in `.gitignore`.
+- **Update the `.env.example` file** whenever environment variables are changed.
+- Do not expose environment variables to the frontend unless they have the `NEXT_PUBLIC_` prefix.
+- Access environment variables only in **server-side code** or **API routes**.
+- **Example**:
+
+  ```javascript
+  // Accessing environment variables in server-side code
+  const apiKey = process.env.MY_API_KEY;
+  ```
+
+### Type Rules
+
+- All type definitions should reside in the `/types` folder at the root of the project.
+- Organize types in subfolders according to concerns (e.g., `/types/user`, `/types/common`).
+- Use **barrel files** (`index.ts`) in each subfolder to re-export types.
+- Use a root `index.ts` in `/types` to export all types for centralized imports.
+- Use **TypeScript interfaces**; prefer interfaces over type aliases.
+- Avoid using the `any` type; define proper types for all variables and function parameters.
+- Name files descriptively (e.g., `user-types.ts`).
+- **Example**:
+
+  ```typescript
+  // types/actions/index.ts
+  export * from './actions-types';
+
+  // types/index.ts (root barrel file)
+  export * from './actions';
+  export * from './user';
+  export * from './common';
+  ```
+
+### Function Declarations
+
+- Use the `function` keyword for **pure functions**.
+- Use **arrow functions** for React components and callbacks.
+- **Example**:
+
+  ```typescript
+  // Pure function
+  function calculateSum(a: number, b: number): number {
+    return a + b;
+  }
+
+  // React component
+  const MyComponent: React.FC<Props> = (props) => {
+    return <div>{props.message}</div>;
+  };
+  ```
+
+### Enums
+
+- **In Database Schemas**: Use enums (`pgEnum` in Drizzle ORM) for columns with a limited set of possible values.
+
+  ```typescript
+  import { pgEnum } from "drizzle-orm/pg-core";
+
+  export const roleEnum = pgEnum("role", ["admin", "user", "guest"]);
+  ```
+
+- **In Application Code**: Avoid enums; use union types or object maps instead.
+
+  ```typescript
+  type Role = "admin" | "user" | "guest";
+  ```
+
+## Syntax and Conventions
+
+- Start with **detailed pseudocode** before implementation.
+- **Naming Conventions**:
+  - Use `camelCase` for variables and functions.
+  - Use `PascalCase` for components and classes.
+- Enforce consistent style with **ESLint** and **Prettier**.
+- Avoid unnecessary curly braces in conditionals; use concise syntax.
+- Use **declarative JSX** in React components.
+- **TypeScript Usage**:
+  - Use TypeScript for all code.
+  - Prefer interfaces over type aliases.
+  - Avoid enums in application code; use maps or union types instead.
+
+## Best Practices
+
+### Chain of Thought
+
+- Use **chain of thought** techniques to guide your inner monologue.
+- **Plan your work before starting**: Think through the best approach to a problem.
+- **Iterate on ideas** and make decisions using dialectic, deductive, and inductive reasoning.
+
+### Chain of Verification
+
+- After completing your work, use **chain of verification** techniques.
+- **Verify your work**: Think through the best ways to check for errors, bugs, and other issues.
+- Ensure alignment with requirements and identify any discrepancies.
+
+## Frontend Rules
+
+### General Guidelines
+
+## Project Management and Planning
+
+### Plan Assistant Instructions
+
+Maintain detailed project planning documents using `docs/assistant_plan.md` and `docs/plan_assistant_instructions.md`.
+
+#### Two Streams of Planning
+
+1. **Short-Term Tactical Plan**
+   - **Purpose**: Focus on immediate, actionable tasks.
+   - **Contains**: Active Tasks, Issues and Blockers, Working Notes.
+   - **Updates**: Frequent updates as tasks progress.
+
+2. **Long-Term Roadmap**
+   - **Purpose**: Outline overall project vision and long-term objectives.
+   - **Contains**: Project Overview, Backlog, Major Milestones.
+   - **Updates**: Updated as project scope or objectives change.
+
+#### Simplified Template for `assistant_plan.md`
+
+**Project Overview**
+
+- **Project Name**:
+- **Current Phase**:
+- **Overall Progress (% completed)**:
+- **Project Objectives**:
+- **Last Updated**:
+
+---
+
+**Active Tasks**
+
+| Task ID | Priority (1-5) | Description          | Status       | Dependencies | Blocks | Critical (Y/N) | Est. Completion |
+|---------|----------------|----------------------|--------------|--------------|--------|----------------|-----------------|
+| TASK-01 | 1              | Implement Login Page | In Progress  | -            | TASK-02| Y              | 2 days          |
+
+---
+
+**Completed Tasks**
+
+| Task ID | Description          | Outcome                  | Date Completed |
+|---------|----------------------|--------------------------|----------------|
+| TASK-00 | Setup Project Scaffold | Successfully initialized project repository | 2023-10-01 |
+
+---
+
+**Backlog**
+
+| Task ID | Description                   | Priority (1-5) |
+|---------|-------------------------------|----------------|
+| TASK-03 | Integrate Payment Gateway     | 2              |
+
+---
+
+**Issues and Blockers**
+
+| Issue ID | Description                  | Impact        | Resolution Plan        | Date Identified |
+|----------|------------------------------|---------------|------------------------|-----------------|
+| ISSUE-01 | API Rate Limit Reached       | High          | Optimize API calls     | 2023-10-05      |
+
+---
+
+**Notes and Observations**
+
+- **2023-10-05**: Noted that the API rate limits are affecting data fetching for the dashboard.
+
+---
+
+**Working Notes**
+
+- Brainstorm ways to cache API responses to reduce the number of calls.
+
+---
+
+**Version History**
+
+| Version | Date       | Changes Made             | Reasoning              |
+|---------|------------|--------------------------|------------------------|
+| 1.0     | 2023-10-01 | Initial project planning | Project kickoff        |
+
+---
+
+**Plan Metadata**
+
+- **Author**: [Your Name]
+- **Last Updated**: [Date]
+- **Checksum**: [Generated Value]
+- **Last Audit Date**: [Date]
+
+#### Usage Guidelines
+
+- **Task Management**:
+  - Assign unique **Task IDs** and set **priorities**.
+  - Update tasks' **status** as progress is made.
+  - Use **Dependencies** and **Blocks** fields to manage task sequencing.
+- **Priority and Sequencing**:
+  - Use a **1-5 scale** for priority (1 being highest).
+- **Issues and Blockers**:
+  - Document any issues or blockers that arise.
+  - Provide a **Resolution Plan** for each issue.
+- **Notes and Observations**:
+  - Record decisions, insights, and observations.
+- **Version History and Auditing**:
+  - Maintain a **version history** with reasoning behind changes.
+  - Regularly **audit the plan** for consistency and completeness.
+
+### Adaptive Learning
+
+- Document **feedback** and **lessons learned** in `assistant_plan.md`.
+- Iteratively **adapt rules** using adaptive learning principles.
+- Adjust guidelines based on evolving standards and project needs.
+
+## Database and Security
+
+- Use **Supabase** and **Drizzle ORM** with PostgreSQL.
+- Wrap multi-table operations in **transactions**.
+- Use `httpOnly` cookies for session tokens.
+- Validate inputs with **`zod`** 
+- Store sensitive information in **environment variables**.
+- Secure all API calls; use **HTTPS** for external communications.
+- Implement robust **error handling** and **logging**.
+
+## Error Handling
+
+- Implement comprehensive error handling in both client-side components and server-side API routes.
+- Use `error.tsx` for route-specific errors and **global error boundaries** in Next.js applications.
+- Wrap asynchronous code in **try/catch** blocks for granular error handling.
+- Implement a centralized **error logging system** for server-side errors:
+  - Log critical errors with full **stack traces** for debugging.
+  - Use **structured logging** for easier parsing and analysis.
+- Display **user-friendly error messages** on the client side:
+  - Use **toast notifications** for non-critical errors.
+  - Implement **full-page error states** for critical failures.
+- Differentiate between **critical** and **non-critical** issues in both logging and user feedback.
+- Use **custom error classes** to categorize and handle specific error types consistently.
+- Implement **error boundaries** in React components to prevent UI crashes.
+- Ensure all API responses include appropriate **error status codes** and messages.
+
+### Error Tracking and Resolution
+
+Errors should be systematically tracked and documented to maintain an accurate progress log and ensure all issues are adequately addressed.
+
+- **Centralized Error Logging**:
+  - Maintain a dedicated `/docs/errors.md` file to record all errors and their resolutions.
+- **Error Log Structure**:
+  - Each error entry should include:
+    - **Error ID**: A unique identifier (e.g., `ERR-001`).
+    - **Timestamp**: When the error was first detected.
+    - **Description**: Detailed error description, including context and reproduction steps.
+    - **Impact**: Assessment of how the error affects the project.
+    - **Status**: Current status (Open, In Progress, Resolved).
+    - **Potential Root Cause**: Identified using deductive reasoning and root cause analysis techniques (e.g., 5 Whys, Ishikawa diagrams).
+    - **Resolution Attempts**: Chronological list of steps taken to fix the error.
+    - **Final Resolution**: Description of how the error was ultimately resolved.
+    - **Date Resolved**: When the error was fixed.
+    - **Related Task IDs**: Reference to associated tasks in `assistant_plan.md`.
+    - **Lessons Learned**: Insights gained from the error and its resolution.
+- **Workflow for Error Tracking**:
+  - **Immediate Logging**: Log errors as soon as they are encountered.
+  - **Action Planning**: Before attempting fixes, outline proposed steps in the error entry.
+  - **Status Updates**: Update the status and resolution attempts as you work through the error.
+  - **Final Review**: After resolving the error, review the entry for completeness.
+  - **Lessons Learned**: Document preventive measures for future reference.
+- **Templates**: Use a standard template for logging errors to ensure consistency.
+
+**Error Log Template**:
+
+```markdown
+#### Error ID: ERR-XXX
+- **Timestamp**:
+- **Description**:
+- **Impact**:
+- **Status**:
+- **Potential Root Cause**:
+- **Resolution Attempts**:
+  1.
+  2.
+- **Final Resolution**:
+- **Date Resolved**:
+- **Related Task IDs**:
+- **Lessons Learned**:
+```
+
+- **Integration with Version Control**:
+  - Reference Error IDs in commit messages.
+  - Use feature branches for fixes if necessary.
+- **Accessibility**: Ensure the `/docs/errors.md` is accessible to all team members.
+
+## Version Control and CI/CD
+
+- Implement **GitHub Actions** or **Vercel** for automated testing and deployment.
+- Use **Git Flow** for version control.
+  - **Feature branches** for new features.
+  - **Develop** and **main** branches for integration and production-ready code.
+- Document tasks, decisions, and progress in `docs/assistant_plan.md`.
+- Track instructions and guidelines in `docs/plan_assistant_instructions.md`.
+
+## Testing and Documentation
+
+- Use **Jest** and **React Testing Library** with **Arrange-Act-Assert** structure.
+- Aim for **80% test coverage** on critical features.
+- Maintain **JSDoc** comments and an up-to-date **README**.
+- Follow **Git Flow** for branching, tagging releases, and updating changelogs.
+
+### Mock Data
+
+- Use **mock data** to test and validate your work without affecting real data.
+- Store all mock data in the `/dummyData` folder.
+- **Guidelines**:
+  - Do not store mock data directly in source code files.
+  - Use mock data files during development and testing phases.
+  - Ensure mock data conforms to the same structure and types as production data.
+
+## Handling Ambiguity
+
+- **Silently analyze** possible interpretations of ambiguous requests.
+- If clarity is crucial, **concisely ask for specific clarification**.
+
+## Type Safety
+
+- Use **TypeScript interfaces** for all data structures, especially API responses.
+- Avoid using the **`any`** type; define proper types for all variables and function parameters.
+
+## API Calls and Integration
+
+- Handle all interactions with external APIs on the **server side**.
+- Create dedicated **API routes** in the `app/api/` directory for each external API interaction.
+- Client-side components should fetch data through these API routes.
+- **API Client Initialization**:
+  - Initialize API clients (e.g., Stripe SDK) in server-side code only.
+  - Implement checks to ensure API clients are properly initialized.
+- **Data Fetching in Components**:
+  - Use React hooks (e.g., `useEffect`) for data fetching in client-side components when necessary.
+  - Implement **loading states** and **error handling** for all data-fetching operations.
+
+
