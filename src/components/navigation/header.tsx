@@ -14,12 +14,6 @@ export function Header({ userName, userAvatar, role }: HeaderProps) {
   return (
     <header className="bg-background-primary h-16 border-b border-gray-800 flex items-center justify-between px-6">
       <div className="flex items-center">
-        <h1 className="text-xl font-bold text-white">
-          GWR Hackathon
-          {role === 'admin' && ' | Administrator Portal'}
-          {role === 'judge' && ' | Judge Portal'}
-          {role === 'participant' && ' | Participant Portal'}
-        </h1>
       </div>
       <div className="flex items-center space-x-4">
         <Link to={`/${role}/profile`}>

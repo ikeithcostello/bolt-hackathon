@@ -12,14 +12,14 @@ interface StatsSectionProps {
 
 export function StatsSection({ 
   stats = [
-    { value: '1M+', label: 'Submissions' },
-    { value: '$350K', label: 'Prize Pool' },
-    { value: '50+', label: 'Countries' },
+    { value: '200K+', label: 'Submissions' },
+    { value: '$1M', label: 'Prize Pool' },
+    { value: '90+', label: 'Countries' },
     { value: '1,250', label: 'Judges' }
   ]
 }: StatsSectionProps) {
   return (
-    <div className="bg-background-secondary py-12">
+    <div className="bg-background-secondary pt-6 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {stats.map((stat, index) => (

@@ -1,23 +1,199 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { 
   Bell, 
-  Globe, 
-  Lock, 
-  Mail, 
   LayoutGrid, 
-  Moon, 
   Save, 
   Server, 
   Shield, 
   Sliders, 
-  User, 
-  Users
+  Users,
+  Plus,
+  Edit,
+  Trash2,
+  Star,
+  Check,
+  X,
+  AlertCircle
 } from 'lucide-react';
 
+// Define the possible settings sections
+type SettingsSection = 'general' | 'security' | 'notifications' | 'appearance' | 'integrations' | 'users' | 'criteria';
+
+// Define the criteria type options
+type CriteriaType = 'numeric' | 'checkbox' | 'text';
+
+// Define the criteria interface
+interface Criterion {
+  id: string;
+  name: string;
+  description: string;
+  type: CriteriaType;
+  category: string;
+  weight: number;
+  required: boolean;
+  config: {
+    min?: number;
+    max?: number;
+    step?: number;
+    options?: string[];
+  };
+}
+
 function Settings() {
+  // State to track the active settings section
+  const [activeSection, setActiveSection] = useState<SettingsSection>('general');
+  
+  // State for criteria management
+  const [criteria, setCriteria] = useState<Criterion[]>([
+    {
+      id: '1',
+      name: 'Innovation',
+      description: 'How innovative is the solution?',
+      type: 'numeric',
+      category: 'Technical',
+      weight: 25,
+      required: true,
+      config: {
+        min: 1,
+        max: 10,
+        step: 1
+      }
+    },
+    {
+      id: '2',
+      name: 'User Experience',
+      description: 'Quality of the user interface and experience',
+      type: 'numeric',
+      category: 'Design',
+      weight: 20,
+      required: true,
+      config: {
+        min: 1,
+        max: 10,
+        step: 1
+      }
+    },
+    {
+      id: '3',
+      name: 'Technical Merit',
+      description: 'Technical complexity and implementation quality',
+      type: 'numeric',
+      category: 'Technical',
+      weight: 25,
+      required: true,
+      config: {
+        min: 1,
+        max: 10,
+        step: 1
+      }
+    },
+    {
+      id: '4',
+      name: 'Completion',
+      description: 'Is the project fully implemented and functional?',
+      type: 'checkbox',
+      category: 'Completion',
+      weight: 10,
+      required: true,
+      config: {}
+    },
+    {
+      id: '5',
+      name: 'Documentation',
+      description: 'Quality of documentation provided',
+      type: 'numeric',
+      category: 'Documentation',
+      weight: 10,
+      required: false,
+      config: {
+        min: 1,
+        max: 5,
+        step: 1
+      }
+    }
+  ]);
+  
+  // State for editing a criterion
+  const [editingCriterion, setEditingCriterion] = useState<Criterion | null>(null);
+  
+  // State for showing the criterion form
+  const [showCriterionForm, setShowCriterionForm] = useState(false);
+  
+  // State for categories
+  const [categories, setCategories] = useState<string[]>([
+    'Technical', 'Design', 'Completion', 'Documentation', 'Impact', 'Presentation'
+  ]);
+  
+  // Function to handle navigation item clicks
+  const handleNavClick = (section: SettingsSection) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    setActiveSection(section);
+  };
+  
+  // Function to add a new criterion
+  const handleAddCriterion = () => {
+    setEditingCriterion({
+      id: Date.now().toString(),
+      name: '',
+      description: '',
+      type: 'numeric',
+      category: categories[0],
+      weight: 10,
+      required: false,
+      config: {
+        min: 1,
+        max: 10,
+        step: 1
+      }
+    });
+    setShowCriterionForm(true);
+  };
+  
+  // Function to edit a criterion
+  const handleEditCriterion = (criterion: Criterion) => {
+    setEditingCriterion({ ...criterion });
+    setShowCriterionForm(true);
+  };
+  
+  // Function to delete a criterion
+  const handleDeleteCriterion = (id: string) => {
+    setCriteria(criteria.filter(c => c.id !== id));
+  };
+  
+  // Function to save a criterion
+  const handleSaveCriterion = () => {
+    if (editingCriterion) {
+      const isNew = !criteria.some(c => c.id === editingCriterion.id);
+      
+      if (isNew) {
+        // Add new criterion
+        setCriteria([...criteria, editingCriterion]);
+      } else {
+        // Update existing criterion
+        setCriteria(criteria.map(c => c.id === editingCriterion.id ? editingCriterion : c));
+      }
+      
+      setEditingCriterion(null);
+      setShowCriterionForm(false);
+    }
+  };
+  
+  // Function to cancel editing
+  const handleCancelEdit = () => {
+    setEditingCriterion(null);
+    setShowCriterionForm(false);
+  };
+  
+  // Function to add a new category
+  const handleAddCategory = (category: string) => {
+    if (category && !categories.includes(category)) {
+      setCategories([...categories, category]);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <motion.div
@@ -48,38 +224,72 @@ function Settings() {
           <Card>
             <CardContent className="p-0">
               <ul className="divide-y divide-gray-800">
-                <li className="p-4 bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue">
-                  <a href="#general" className="flex items-center text-accent-blue">
+                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'general' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                  <a 
+                    href="#" 
+                    onClick={handleNavClick('general')}
+                    className={`flex items-center ${activeSection === 'general' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
+                  >
                     <Sliders className="mr-2" size={18} />
                     <span>General</span>
                   </a>
                 </li>
-                <li className="p-4 hover:bg-gray-800 transition-colors">
-                  <a href="#security" className="flex items-center text-gray-300 hover:text-white">
+                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'criteria' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                  <a 
+                    href="#" 
+                    onClick={handleNavClick('criteria')}
+                    className={`flex items-center ${activeSection === 'criteria' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
+                  >
+                    <Star className="mr-2" size={18} />
+                    <span>Evaluation Criteria</span>
+                  </a>
+                </li>
+                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'security' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                  <a 
+                    href="#" 
+                    onClick={handleNavClick('security')}
+                    className={`flex items-center ${activeSection === 'security' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
+                  >
                     <Shield className="mr-2" size={18} />
                     <span>Security</span>
                   </a>
                 </li>
-                <li className="p-4 hover:bg-gray-800 transition-colors">
-                  <a href="#notifications" className="flex items-center text-gray-300 hover:text-white">
+                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'notifications' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                  <a 
+                    href="#" 
+                    onClick={handleNavClick('notifications')}
+                    className={`flex items-center ${activeSection === 'notifications' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
+                  >
                     <Bell className="mr-2" size={18} />
                     <span>Notifications</span>
                   </a>
                 </li>
-                <li className="p-4 hover:bg-gray-800 transition-colors">
-                  <a href="#appearance" className="flex items-center text-gray-300 hover:text-white">
+                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'appearance' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                  <a 
+                    href="#" 
+                    onClick={handleNavClick('appearance')}
+                    className={`flex items-center ${activeSection === 'appearance' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
+                  >
                     <LayoutGrid className="mr-2" size={18} />
                     <span>Appearance</span>
                   </a>
                 </li>
-                <li className="p-4 hover:bg-gray-800 transition-colors">
-                  <a href="#integrations" className="flex items-center text-gray-300 hover:text-white">
+                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'integrations' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                  <a 
+                    href="#" 
+                    onClick={handleNavClick('integrations')}
+                    className={`flex items-center ${activeSection === 'integrations' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
+                  >
                     <Server className="mr-2" size={18} />
                     <span>Integrations</span>
                   </a>
                 </li>
-                <li className="p-4 hover:bg-gray-800 transition-colors">
-                  <a href="#users" className="flex items-center text-gray-300 hover:text-white">
+                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'users' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                  <a 
+                    href="#" 
+                    onClick={handleNavClick('users')}
+                    className={`flex items-center ${activeSection === 'users' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
+                  >
                     <Users className="mr-2" size={18} />
                     <span>User Management</span>
                   </a>
@@ -95,7 +305,303 @@ function Settings() {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="lg:col-span-3"
         >
-          <Card id="general">
+          {activeSection === 'criteria' && (
+            <>
+              {showCriterionForm ? (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Star className="mr-2" size={20} />
+                      {editingCriterion?.id && criteria.some(c => c.id === editingCriterion.id) 
+                        ? 'Edit Criterion' 
+                        : 'Add New Criterion'}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {editingCriterion && (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">
+                              Criterion Name*
+                            </label>
+                            <input
+                              type="text"
+                              className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                              value={editingCriterion.name}
+                              onChange={(e) => setEditingCriterion({...editingCriterion, name: e.target.value})}
+                              required
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">
+                              Category
+                            </label>
+                            <div className="flex space-x-2">
+                              <select
+                                className="flex-1 px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                                value={editingCriterion.category}
+                                onChange={(e) => setEditingCriterion({...editingCriterion, category: e.target.value})}
+                              >
+                                {categories.map((category) => (
+                                  <option key={category} value={category}>{category}</option>
+                                ))}
+                                <option value="new">+ Add New Category</option>
+                              </select>
+                              
+                              {editingCriterion.category === 'new' && (
+                                <input
+                                  type="text"
+                                  className="flex-1 px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                                  placeholder="New category name"
+                                  onBlur={(e) => {
+                                    handleAddCategory(e.target.value);
+                                    setEditingCriterion({...editingCriterion, category: e.target.value});
+                                  }}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-400 mb-2">
+                            Description
+                          </label>
+                          <textarea
+                            className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                            rows={3}
+                            value={editingCriterion.description}
+                            onChange={(e) => setEditingCriterion({...editingCriterion, description: e.target.value})}
+                          ></textarea>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">
+                              Criterion Type
+                            </label>
+                            <select
+                              className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                              value={editingCriterion.type}
+                              onChange={(e) => {
+                                const type = e.target.value as CriteriaType;
+                                let config = editingCriterion.config;
+                                
+                                // Reset config based on type
+                                if (type === 'numeric') {
+                                  config = { min: 1, max: 10, step: 1 };
+                                } else if (type === 'checkbox') {
+                                  config = {};
+                                } else if (type === 'text') {
+                                  config = {};
+                                }
+                                
+                                setEditingCriterion({...editingCriterion, type, config});
+                              }}
+                            >
+                              <option value="numeric">Numeric Scale</option>
+                              <option value="checkbox">Checkbox (Yes/No)</option>
+                              <option value="text">Text Response</option>
+                            </select>
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">
+                              Weight (%)
+                            </label>
+                            <input
+                              type="number"
+                              className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                              value={editingCriterion.weight}
+                              onChange={(e) => setEditingCriterion({...editingCriterion, weight: parseInt(e.target.value) || 0})}
+                              min="0"
+                              max="100"
+                            />
+                          </div>
+                          
+                          <div className="flex items-end">
+                            <label className="flex items-center">
+                              <input
+                                type="checkbox"
+                                className="rounded bg-gray-700 border-gray-600 text-accent-blue mr-2"
+                                checked={editingCriterion.required}
+                                onChange={(e) => setEditingCriterion({...editingCriterion, required: e.target.checked})}
+                              />
+                              <span className="text-sm font-medium">Required</span>
+                            </label>
+                          </div>
+                        </div>
+                        
+                        {editingCriterion.type === 'numeric' && (
+                          <div className="p-4 bg-gray-800 rounded-md">
+                            <h4 className="text-sm font-medium mb-3">Numeric Scale Configuration</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div>
+                                <label className="block text-xs text-gray-400 mb-2">
+                                  Minimum Value
+                                </label>
+                                <input
+                                  type="number"
+                                  className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                                  value={editingCriterion.config.min || 1}
+                                  onChange={(e) => setEditingCriterion({
+                                    ...editingCriterion, 
+                                    config: {...editingCriterion.config, min: parseInt(e.target.value) || 1}
+                                  })}
+                                />
+                              </div>
+                              
+                              <div>
+                                <label className="block text-xs text-gray-400 mb-2">
+                                  Maximum Value
+                                </label>
+                                <input
+                                  type="number"
+                                  className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                                  value={editingCriterion.config.max || 10}
+                                  onChange={(e) => setEditingCriterion({
+                                    ...editingCriterion, 
+                                    config: {...editingCriterion.config, max: parseInt(e.target.value) || 10}
+                                  })}
+                                />
+                              </div>
+                              
+                              <div>
+                                <label className="block text-xs text-gray-400 mb-2">
+                                  Step
+                                </label>
+                                <input
+                                  type="number"
+                                  className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                                  value={editingCriterion.config.step || 1}
+                                  onChange={(e) => setEditingCriterion({
+                                    ...editingCriterion, 
+                                    config: {...editingCriterion.config, step: parseFloat(e.target.value) || 1}
+                                  })}
+                                  min="0.1"
+                                  step="0.1"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div className="flex justify-end space-x-3 pt-4">
+                          <Button variant="ghost" onClick={handleCancelEdit} leftIcon={<X size={16} />}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleSaveCriterion} leftIcon={<Check size={16} />}>
+                            Save Criterion
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="flex items-center">
+                        <Star className="mr-2" size={20} />
+                        Evaluation Criteria
+                      </CardTitle>
+                      <Button onClick={handleAddCriterion} leftIcon={<Plus size={16} />} size="sm">
+                        Add Criterion
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="text-xs text-gray-400 border-b border-gray-800">
+                            <th className="px-4 py-3 text-left">Name</th>
+                            <th className="px-4 py-3 text-left">Category</th>
+                            <th className="px-4 py-3 text-left">Type</th>
+                            <th className="px-4 py-3 text-center">Weight</th>
+                            <th className="px-4 py-3 text-center">Required</th>
+                            <th className="px-4 py-3 text-right">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-800">
+                          {criteria.map((criterion) => (
+                            <tr key={criterion.id} className="text-sm hover:bg-gray-800">
+                              <td className="px-4 py-3">
+                                <div>
+                                  <div className="font-medium">{criterion.name}</div>
+                                  <div className="text-xs text-gray-400">{criterion.description}</div>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3">
+                                <span className="text-xs px-2 py-1 rounded-full bg-blue-900 bg-opacity-20 text-accent-blue">
+                                  {criterion.category}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3">
+                                {criterion.type === 'numeric' && (
+                                  <span>
+                                    Numeric ({criterion.config.min}-{criterion.config.max})
+                                  </span>
+                                )}
+                                {criterion.type === 'checkbox' && <span>Yes/No</span>}
+                                {criterion.type === 'text' && <span>Text</span>}
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                {criterion.weight}%
+                              </td>
+                              <td className="px-4 py-3 text-center">
+                                {criterion.required ? (
+                                  <Check size={16} className="text-accent-green mx-auto" />
+                                ) : (
+                                  <X size={16} className="text-gray-500 mx-auto" />
+                                )}
+                              </td>
+                              <td className="px-4 py-3">
+                                <div className="flex justify-end space-x-2">
+                                  <button 
+                                    className="p-1 hover:bg-gray-700 rounded-md"
+                                    onClick={() => handleEditCriterion(criterion)}
+                                  >
+                                    <Edit size={16} className="text-gray-400" />
+                                  </button>
+                                  <button 
+                                    className="p-1 hover:bg-gray-700 rounded-md"
+                                    onClick={() => handleDeleteCriterion(criterion.id)}
+                                  >
+                                    <Trash2 size={16} className="text-accent-red" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                    <div className="mt-6 p-4 bg-gray-800 rounded-md border border-gray-700">
+                      <div className="flex items-start">
+                        <AlertCircle size={20} className="text-accent-yellow mr-3 mt-1 flex-shrink-0" />
+                        <div>
+                          <h4 className="font-medium mb-1">Important Notes</h4>
+                          <ul className="text-sm text-gray-400 space-y-1 list-disc list-inside">
+                            <li>The weights of all criteria should add up to 100% for a balanced evaluation.</li>
+                            <li>Changes to criteria will only affect new evaluations; existing ones will use the criteria defined at their creation time.</li>
+                            <li>You can create custom categories to group related criteria together.</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
+
+          {activeSection === 'general' && (
+            <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Sliders className="mr-2" size={20} />
@@ -104,60 +610,65 @@ function Settings() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
+                  <h3 className="text-lg font-medium mb-4">Platform Settings</h3>
+                  
+                  <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-400 mb-2">
                   Platform Name
                 </label>
                 <input
                   type="text"
                   className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
-                  defaultValue="GWR Hackathon Evaluation Platform"
+                      defaultValue="The World's Largest Hackathon Evaluation Platform"
                 />
               </div>
 
-              <div>
+                  <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-400 mb-2">
-                  Contact Email
+                      Platform URL
                 </label>
                 <div className="flex">
-                  <span className="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-700 bg-gray-700 text-gray-400">
-                    <Mail size={16} />
+                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-700 bg-gray-700 text-gray-400 text-sm">
+                        http://
                   </span>
                   <input
-                    type="email"
-                    className="flex-1 px-4 py-2 rounded-r-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
-                    defaultValue="admin@gwrhackathon.com"
+                        type="text"
+                        className="flex-1 min-w-0 block w-full px-4 py-2 rounded-r-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                        defaultValue="hackathon.dev"
                   />
                 </div>
               </div>
 
-              <div>
+                  <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-400 mb-2">
-                  Language
+                      Admin Contact Email
                 </label>
-                <div className="flex">
-                  <span className="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-700 bg-gray-700 text-gray-400">
-                    <Globe size={16} />
-                  </span>
-                  <select className="flex-1 px-4 py-2 rounded-r-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue">
-                    <option value="en">English</option>
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                    <option value="zh">Chinese</option>
-                  </select>
-                </div>
+                    <input
+                      type="email"
+                      className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                      defaultValue="admin@example.com"
+                    />
               </div>
 
-              <div>
+                  <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-400 mb-2">
                   Timezone
                 </label>
                 <select className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue">
-                  <option value="UTC">UTC (Coordinated Universal Time)</option>
-                  <option value="EST">EST (Eastern Standard Time)</option>
-                  <option value="PST">PST (Pacific Standard Time)</option>
-                  <option value="GMT">GMT (Greenwich Mean Time)</option>
+                      <option>(GMT-08:00) Pacific Time</option>
+                      <option>(GMT-07:00) Mountain Time</option>
+                      <option>(GMT-06:00) Central Time</option>
+                      <option>(GMT-05:00) Eastern Time</option>
+                      <option>(GMT-04:00) Atlantic Time</option>
+                      <option>(GMT+00:00) UTC</option>
+                      <option>(GMT+01:00) Central European Time</option>
+                      <option>(GMT+02:00) Eastern European Time</option>
+                      <option>(GMT+05:30) India Standard Time</option>
+                      <option>(GMT+08:00) China Standard Time</option>
+                      <option>(GMT+09:00) Japan Standard Time</option>
+                      <option>(GMT+10:00) Australian Eastern Time</option>
                 </select>
+                  </div>
               </div>
 
               <div className="pt-4 border-t border-gray-800">
@@ -198,28 +709,24 @@ function Settings() {
                 </div>
 
                 <div className="mb-4">
-                  <label className="flex items-center gap-2 mb-4">
-                    <input type="checkbox" className="rounded bg-gray-700 border-gray-600 text-accent-blue" defaultChecked />
-                    <span className="text-sm font-medium">Enable judge calibration</span>
+                    <label className="block text-sm font-medium text-gray-400 mb-2">
+                      Minimum Judges per Submission
                   </label>
-                  
-                  <label className="flex items-center gap-2 mb-4">
-                    <input type="checkbox" className="rounded bg-gray-700 border-gray-600 text-accent-blue" defaultChecked />
-                    <span className="text-sm font-medium">Enable conflict detection (four-eyes principle)</span>
-                  </label>
-                  
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded bg-gray-700 border-gray-600 text-accent-blue" defaultChecked />
-                    <span className="text-sm font-medium">Require comments for scores below 5</span>
-                  </label>
+                    <input
+                      type="number"
+                      className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                      defaultValue="3"
+                      min="1"
+                      max="10"
+                    />
                 </div>
               </div>
             </CardContent>
           </Card>
+          )}
 
-          <div className="h-6"></div>
-
-          <Card id="security">
+          {activeSection === 'security' && (
+            <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Shield className="mr-2" size={20} />
@@ -255,44 +762,90 @@ function Settings() {
                   />
                 </div>
 
-                <div className="flex justify-between items-center p-4 bg-gray-800 rounded-md mb-4">
-                  <div className="flex items-center">
-                    <Lock className="text-accent-blue mr-2" size={18} />
-                    <span>Reset all judge passwords</span>
+                  <div className="pt-4 border-t border-gray-800">
+                    <h3 className="text-lg font-medium mb-4">Data Protection</h3>
+                    
+                    <div className="mb-4">
+                      <label className="flex items-center gap-2 mb-4">
+                        <input type="checkbox" className="rounded bg-gray-700 border-gray-600 text-accent-blue" defaultChecked />
+                        <span className="text-sm font-medium">Enable data encryption</span>
+                      </label>
+                      
+                      <label className="flex items-center gap-2 mb-4">
+                        <input type="checkbox" className="rounded bg-gray-700 border-gray-600 text-accent-blue" defaultChecked />
+                        <span className="text-sm font-medium">Automated security audits</span>
+                      </label>
+                      
+                      <label className="flex items-center gap-2 mb-4">
+                        <input type="checkbox" className="rounded bg-gray-700 border-gray-600 text-accent-blue" defaultChecked />
+                        <span className="text-sm font-medium">IP filtering and rate limiting</span>
+                      </label>
+                    </div>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Reset
-                  </Button>
                 </div>
+              </CardContent>
+            </Card>
+          )}
 
-                <div className="flex justify-between items-center p-4 bg-gray-800 rounded-md">
+          {activeSection === 'notifications' && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Bell className="mr-2" size={20} />
+                  Notification Settings
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Email Notifications</h3>
+                  
+                  <div className="space-y-4">
+                    <label className="flex items-center justify-between p-3 bg-gray-800 rounded-md">
+                      <div className="flex items-center">
+                        <span>New Submission Alerts</span>
+                      </div>
+                      <input type="checkbox" className="toggle toggle-accent" defaultChecked />
+                    </label>
+                    
+                    <label className="flex items-center justify-between p-3 bg-gray-800 rounded-md">
+                      <div className="flex items-center">
+                        <span>Evaluation Completion</span>
+                      </div>
+                      <input type="checkbox" className="toggle toggle-accent" defaultChecked />
+                    </label>
+                    
+                    <label className="flex items-center justify-between p-3 bg-gray-800 rounded-md">
+                      <div className="flex items-center">
+                        <span>Judge Assignment</span>
+                      </div>
+                      <input type="checkbox" className="toggle toggle-accent" defaultChecked />
+                    </label>
+                    
+                    <label className="flex items-center justify-between p-3 bg-gray-800 rounded-md">
                   <div className="flex items-center">
-                    <User className="text-accent-blue mr-2" size={18} />
-                    <span>Reset all participant passwords</span>
+                        <span>System Updates</span>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Reset
-                  </Button>
+                      <input type="checkbox" className="toggle toggle-accent" defaultChecked />
+                    </label>
                 </div>
               </div>
             </CardContent>
           </Card>
+          )}
 
-          <div className="h-6"></div>
-
-          <Card id="appearance">
+          {activeSection === 'appearance' && (
+            <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Moon className="mr-2" size={20} />
+                  <LayoutGrid className="mr-2" size={20} />
                 Appearance Settings
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-400 mb-4">
-                  Color Theme
-                </label>
-                <div className="grid grid-cols-3 gap-4">
+              <CardContent className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Theme</h3>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="relative">
                     <input 
                       type="radio" 
@@ -303,10 +856,10 @@ function Settings() {
                     />
                     <label 
                       htmlFor="theme-dark" 
-                      className="flex flex-col items-center p-4 bg-gray-800 rounded-md border border-gray-700 cursor-pointer hover:bg-gray-700 peer-checked:border-accent-blue"
+                        className="flex flex-col items-center p-4 rounded-md border border-gray-700 cursor-pointer hover:bg-gray-700 peer-checked:border-accent-blue"
                     >
-                      <div className="w-full h-20 bg-gray-900 rounded-md mb-2"></div>
-                      <span className="text-sm font-medium">Dark Theme</span>
+                        <div className="w-full h-24 bg-gray-900 rounded-md mb-2 border border-gray-700"></div>
+                        <span className="font-medium">Dark Theme</span>
                     </label>
                   </div>
                   
@@ -319,28 +872,11 @@ function Settings() {
                     />
                     <label 
                       htmlFor="theme-light" 
-                      className="flex flex-col items-center p-4 bg-gray-800 rounded-md border border-gray-700 cursor-pointer hover:bg-gray-700 peer-checked:border-accent-blue"
+                        className="flex flex-col items-center p-4 rounded-md border border-gray-700 cursor-pointer hover:bg-gray-700 peer-checked:border-accent-blue"
                     >
-                      <div className="w-full h-20 bg-gray-100 rounded-md mb-2"></div>
-                      <span className="text-sm font-medium">Light Theme</span>
+                        <div className="w-full h-24 bg-gray-200 rounded-md mb-2 border border-gray-300"></div>
+                        <span className="font-medium">Light Theme</span>
                     </label>
-                  </div>
-                  
-                  <div className="relative">
-                    <input 
-                      type="radio" 
-                      name="theme" 
-                      id="theme-system" 
-                      className="sr-only peer" 
-                    />
-                    <label 
-                      htmlFor="theme-system" 
-                      className="flex flex-col items-center p-4 bg-gray-800 rounded-md border border-gray-700 cursor-pointer hover:bg-gray-700 peer-checked:border-accent-blue"
-                    >
-                      <div className="w-full h-20 bg-gradient-to-r from-gray-900 to-gray-100 rounded-md mb-2"></div>
-                      <span className="text-sm font-medium">System Default</span>
-                    </label>
-                  </div>
                 </div>
               </div>
 
@@ -418,21 +954,190 @@ function Settings() {
                     <input 
                       type="radio" 
                       name="accent" 
-                      id="accent-red" 
+                          id="accent-pink" 
                       className="sr-only peer" 
                     />
                     <label 
-                      htmlFor="accent-red" 
+                          htmlFor="accent-pink" 
                       className="flex flex-col items-center p-2 rounded-md border border-gray-700 cursor-pointer hover:bg-gray-700 peer-checked:border-accent-blue"
                     >
-                      <div className="w-full h-8 bg-red-500 rounded-md mb-2"></div>
-                      <span className="text-xs font-medium">Red</span>
-                    </label>
+                          <div className="w-full h-8 bg-pink-500 rounded-md mb-2"></div>
+                          <span className="text-xs font-medium">Pink</span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {activeSection === 'integrations' && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Server className="mr-2" size={20} />
+                  Integrations
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Available Integrations</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 bg-gray-800 rounded-md border border-gray-700">
+                      <div className="flex items-center">
+                        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                          <span className="text-white font-bold">G</span>
+                        </div>
+                        <div>
+                          <h4 className="font-medium">GitHub</h4>
+                          <p className="text-sm text-gray-400">Connect with your GitHub repositories</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">Connect</Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 bg-gray-800 rounded-md border border-gray-700">
+                      <div className="flex items-center">
+                        <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                          <span className="text-white font-bold">S</span>
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Slack</h4>
+                          <p className="text-sm text-gray-400">Get notifications in your Slack channels</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">Connect</Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 bg-gray-800 rounded-md border border-gray-700">
+                      <div className="flex items-center">
+                        <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center mr-4">
+                          <span className="text-white font-bold">D</span>
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Discord</h4>
+                          <p className="text-sm text-gray-400">Send notifications to Discord servers</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">Connect</Button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-gray-800">
+                  <h3 className="text-lg font-medium mb-4">API Access</h3>
+                  
+                  <div className="mb-6">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="block text-sm font-medium text-gray-400">
+                        API Key
+                    </label>
+                      <Button variant="ghost" size="sm">Regenerate</Button>
+                    </div>
+                    <div className="flex">
+                      <input
+                        type="text"
+                        className="flex-1 px-4 py-2 rounded-l-md bg-gray-800 border border-gray-700 text-white focus:outline-none"
+                        value="••••••••••••••••••••••••••••••"
+                        readOnly
+                      />
+                      <button
+                        className="px-4 py-2 rounded-r-md bg-gray-700 border border-l-0 border-gray-700 text-white"
+                      >
+                        Copy
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {activeSection === 'users' && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Users className="mr-2" size={20} />
+                  User Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <h3 className="text-lg font-medium">Platform Users</h3>
+                    <p className="text-sm text-gray-400">Manage administrators, judges, and participants</p>
+                  </div>
+                  <Button size="sm">Add User</Button>
+                </div>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-800">
+                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">Name</th>
+                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">Email</th>
+                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">Role</th>
+                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">Status</th>
+                        <th className="py-3 px-4 text-left text-sm font-medium text-gray-400">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-gray-800">
+                        <td className="py-3 px-4 font-medium">Admin User</td>
+                        <td className="py-3 px-4 text-gray-300">admin@example.com</td>
+                        <td className="py-3 px-4">
+                          <span className="px-2 py-1 text-xs rounded-full bg-blue-900 bg-opacity-20 text-blue-400">Admin</span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="px-2 py-1 text-xs rounded-full bg-green-900 bg-opacity-20 text-green-400">Active</span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex space-x-2">
+                            <Button variant="ghost" size="sm">Edit</Button>
+                            <Button variant="ghost" size="sm" className="text-red-500">Delete</Button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr className="border-b border-gray-800">
+                        <td className="py-3 px-4 font-medium">Judge User</td>
+                        <td className="py-3 px-4 text-gray-300">judge@example.com</td>
+                        <td className="py-3 px-4">
+                          <span className="px-2 py-1 text-xs rounded-full bg-purple-900 bg-opacity-20 text-purple-400">Judge</span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="px-2 py-1 text-xs rounded-full bg-green-900 bg-opacity-20 text-green-400">Active</span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex space-x-2">
+                            <Button variant="ghost" size="sm">Edit</Button>
+                            <Button variant="ghost" size="sm" className="text-red-500">Delete</Button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr className="border-b border-gray-800">
+                        <td className="py-3 px-4 font-medium">Participant User</td>
+                        <td className="py-3 px-4 text-gray-300">participant@example.com</td>
+                        <td className="py-3 px-4">
+                          <span className="px-2 py-1 text-xs rounded-full bg-orange-900 bg-opacity-20 text-orange-400">Participant</span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="px-2 py-1 text-xs rounded-full bg-green-900 bg-opacity-20 text-green-400">Active</span>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex space-x-2">
+                            <Button variant="ghost" size="sm">Edit</Button>
+                            <Button variant="ghost" size="sm" className="text-red-500">Delete</Button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
               </div>
             </CardContent>
           </Card>
+          )}
         </motion.div>
       </div>
     </div>

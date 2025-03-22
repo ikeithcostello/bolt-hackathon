@@ -17,8 +17,8 @@ export function FAQSection({
   subtitle = "Everything you need to know about the world's largest hackathon.",
   faqs = [
     {
-      question: "What makes this the world's largest hackathon?",
-      answer: "Certified by Guinness World Records, this hackathon will feature the highest number of participants from around the globe, with an unprecedented scale of submissions and evaluations."
+      question: "What makes this hackathon special?",
+      answer: "We're aiming to set a world record for the largest coding event, bringing together participants from over 90 countries with 200,000+ submissions expected. This unprecedented scale offers a unique opportunity to be part of coding history."
     },
     {
       question: "How are submissions evaluated?",

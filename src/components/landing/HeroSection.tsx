@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Award } from 'lucide-react';
+import { Zap, Calendar, MapPin, Globe, Menu, X, Award } from 'lucide-react';
 import { Button } from '../ui/button';
 
 interface HeroSectionProps {
@@ -10,10 +10,16 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ 
-  title = "Guinness World Records\nLargest Hackathon",
-  subtitle = "Join millions of developers competing to build innovative solutions and make history in the world's largest hackathon."
+  title = "The World's Largest Hackathon",
+  subtitle = "Join developers worldwide in building innovative solutions to compete for our $1M prize pool. Be part of history with the world's largest coding event."
 }: HeroSectionProps) {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Set document title
+  useEffect(() => {
+    document.title = "The World's Largest Hackathon";
+  }, []);
   
   return (
     <div className="relative min-h-[90vh] flex items-center">
@@ -28,19 +34,23 @@ export function HeroSection({
       <div className="absolute inset-0 bg-gradient-to-b from-background-primary/95 via-background-primary/85 to-background-primary"></div>
       
       {/* Navigation */}
-      <nav className="absolute top-0 left-0 right-0 z-10 py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <nav className="absolute top-0 left-0 right-0 z-10 py-4 px-4 sm:py-6 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <Award className="w-8 h-8 text-accent-blue mr-2" />
-            <span className="text-xl font-bold">GWR Hackathon</span>
+          <div className="flex items-center z-20">
+            <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-[#43AFFF] mr-2" />
+            <span className="text-lg sm:text-xl font-bold">The World's Largest Hackathon</span>
           </div>
+          
+          {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-4">
             <a href="#features" className="px-3 py-2 text-gray-300 hover:text-white">Features</a>
             <a href="#sponsors" className="px-3 py-2 text-gray-300 hover:text-white">Sponsors</a>
             <a href="#judges" className="px-3 py-2 text-gray-300 hover:text-white">Judges</a>
             <a href="#faq" className="px-3 py-2 text-gray-300 hover:text-white">FAQ</a>
           </div>
-          <div>
+          
+          {/* Desktop Buttons */}
+          <div className="hidden md:block">
             <Button 
               variant="outline" 
               className="mr-2"
@@ -54,41 +64,114 @@ export function HeroSection({
               Sign Up
             </Button>
           </div>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden z-20 p-2"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+        
+        {/* Mobile Menu Overlay */}
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-0 left-0 right-0 bg-background-primary z-10 pt-20 pb-6 px-4 sm:px-6 border-b border-gray-800"
+          >
+            <div className="flex flex-col space-y-4">
+              <a href="#features" className="px-1 py-3 text-gray-300 hover:text-white border-b border-gray-800">Features</a>
+              <a href="#sponsors" className="px-1 py-3 text-gray-300 hover:text-white border-b border-gray-800">Sponsors</a>
+              <a href="#judges" className="px-1 py-3 text-gray-300 hover:text-white border-b border-gray-800">Judges</a>
+              <a href="#faq" className="px-1 py-3 text-gray-300 hover:text-white border-b border-gray-800">FAQ</a>
+              
+              <div className="flex flex-col space-y-3 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => navigate('/login')}
+                  className="w-full"
+                >
+                  Log In
+                </Button>
+                <Button 
+                  onClick={() => navigate('/register')}
+                  className="w-full"
+                >
+                  Sign Up
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </nav>
       
       {/* Hero Content */}
-      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-28">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <div className="inline-block bg-background-primary/30 backdrop-blur-sm p-6 md:p-8 rounded-xl border border-white/10 shadow-2xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              {title.split('\n').map((line, i) => (
-                <React.Fragment key={i}>
-                  {i > 0 && <br />}
-                  {i === 1 ? <span className="text-accent-blue">{line}</span> : line}
-                </React.Fragment>
-              ))}
+          <div className="inline-block bg-background-primary/30 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border border-white/10 shadow-2xl w-full sm:w-auto">
+            {/* Refined Prize money callout */}
+            <div className="mb-6">
+              <motion.div 
+                initial={{ opacity: 0.8, scale: 1 }}
+                animate={{ opacity: 1, scale: 1.1 }}
+                transition={{ 
+                  duration: 1.2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "easeInOut"
+                }}
+                className="inline-flex items-center px-5 py-3 rounded-lg bg-background-secondary/80 border border-[#43AFFF]/50 shadow-[0_0_25px_rgba(67,175,255,0.3)] text-lg"
+              >
+                <Award className="text-[#43AFFF] w-6 h-6 mr-3" />
+                <span className="text-[#43AFFF] font-bold mr-1.5 text-xl">$1,000,000</span>
+                <span className="text-gray-300 text-lg">Prize Pool</span>
+              </motion.div>
+            </div>
+            
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
+              {title}
             </h1>
-            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-4 sm:mb-6 max-w-3xl mx-auto">
               {subtitle}
             </p>
-            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            
+            {/* Hackathon details */}
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-6 sm:mb-8 text-gray-300 text-sm sm:text-base">
+              <div className="flex items-center">
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[#43AFFF]" />
+                <span>Date: TBD</span>
+              </div>
+              <div className="flex items-center">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[#43AFFF]" />
+                <span>Location: Virtual</span>
+              </div>
+              <div className="flex items-center">
+                <Globe className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[#43AFFF]" />
+                <a href="http://hackathon.dev" target="_blank" rel="noopener noreferrer" className="hover:text-[#43AFFF] transition-colors">
+                  hackathon.dev
+                </a>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
               <Button 
                 size="lg" 
-                className="text-base"
+                className="text-base bg-[#43AFFF] hover:bg-[#3a9ee6] w-full sm:w-auto"
                 onClick={() => navigate('/register')}
               >
-                Register Now
+                Register
               </Button>
               <Button 
                 variant="outline" 
                 size="lg" 
-                className="text-base bg-background-primary/50 hover:bg-background-primary/70"
+                className="text-base bg-background-primary/50 hover:bg-background-primary/70 w-full sm:w-auto"
                 onClick={() => navigate('/judge/apply')}
               >
                 Become a Judge
@@ -99,7 +182,7 @@ export function HeroSection({
       </div>
       
       {/* Curved bottom edge */}
-      <div className="absolute bottom-0 left-0 right-0">
+      <div className="absolute bottom-0 left-0 right-0 z-0">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" className="w-full" preserveAspectRatio="none">
           <path 
             fill="currentColor" 

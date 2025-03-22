@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Layout
@@ -10,6 +10,7 @@ import Landing from './pages/Landing';
 import Register from './pages/Register';
 import JudgeApplication from './pages/JudgeApplication';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/admin/Dashboard';
 import JudgeDashboard from './pages/judge/Dashboard';
 import ParticipantDashboard from './pages/participant/Dashboard';
@@ -23,10 +24,16 @@ import AdminConflicts from './pages/admin/Conflicts';
 import AdminReports from './pages/admin/Reports';
 import AdminAwards from './pages/admin/Awards';
 import AdminSettings from './pages/admin/Settings';
+import AdminEvaluationProcess from './pages/admin/EvaluationProcess';
 
 import JudgeEvaluations from './pages/judge/Evaluations';
 import JudgeCompleted from './pages/judge/Completed';
 import JudgeSettings from './pages/judge/Settings';
+import TriageEvaluation from './pages/judge/TriageEvaluation';
+import PreliminaryEvaluation from './pages/judge/PreliminaryEvaluation';
+import DetailedEvaluation from './pages/judge/DetailedEvaluation';
+import SemiFinalsEvaluation from './pages/judge/SemiFinalsEvaluation';
+import FinalsEvaluation from './pages/judge/FinalsEvaluation';
 
 import ParticipantSubmissions from './pages/participant/Submissions';
 import ParticipantLeaderboard from './pages/participant/Leaderboard';
@@ -46,10 +53,12 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/judge/apply" element={<JudgeApplication />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Admin routes */}
           <Route path="/admin" element={<MainLayout role="admin" />}>
             <Route index element={<Dashboard />} />
+            <Route path="evaluation-process" element={<AdminEvaluationProcess />} />
             <Route path="judges" element={<AdminJudges />} />
             <Route path="submissions" element={<AdminSubmissions />} />
             <Route path="conflicts" element={<AdminConflicts />} />
@@ -63,6 +72,11 @@ function App() {
           <Route path="/judge" element={<MainLayout role="judge" />}>
             <Route index element={<JudgeDashboard />} />
             <Route path="evaluations" element={<JudgeEvaluations />} />
+            <Route path="evaluations/triage" element={<TriageEvaluation />} />
+            <Route path="evaluations/preliminary" element={<PreliminaryEvaluation />} />
+            <Route path="evaluations/detailed" element={<DetailedEvaluation />} />
+            <Route path="evaluations/semifinals" element={<SemiFinalsEvaluation />} />
+            <Route path="evaluations/finals" element={<FinalsEvaluation />} />
             <Route path="completed" element={<JudgeCompleted />} />
             <Route path="settings" element={<JudgeSettings />} />
           </Route>

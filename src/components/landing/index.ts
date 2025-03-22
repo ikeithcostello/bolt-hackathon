@@ -2,6 +2,8 @@ export * from './HeroSection';
 export * from './StatsSection';
 export * from './FeaturesSection';
 export * from './SponsorsSection';
+export * from './SponsorsGridSection';
+export * from './SponsorsBannerSection';
 export * from './CelebrityJudgesSection';
 export * from './JudgeRecruitmentSection';
 export * from './FAQSection';

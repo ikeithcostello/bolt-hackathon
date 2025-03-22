@@ -12,7 +12,7 @@ interface CTASectionProps {
 
 export function CTASection({
   title = "Ready to Make History?",
-  description = "Join millions of innovators in the Guinness World Records largest hackathon and showcase your skills on a global stage.",
+  description = "Join thousands of innovators in the world's largest coding event. Showcase your skills, collaborate globally, and compete for $1M in prizes.",
   buttonText = "Register Now",
   buttonLink = "/register"
 }: CTASectionProps) {

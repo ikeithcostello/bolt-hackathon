@@ -3,13 +3,15 @@ import {
   HeroSection,
   StatsSection,
   FeaturesSection,
-  SponsorsSection,
-  CelebrityJudgesSection,
   JudgeRecruitmentSection,
   FAQSection,
   CTASection,
   Footer
 } from '../components/landing';
+
+import { SponsorsGridSection } from '@/components/landing/SponsorsGridSection';
+import { CelebrityJudgesSection } from '@/components/landing/CelebrityJudgesSection';
+
 
 function Landing() {
   return (
@@ -17,7 +19,7 @@ function Landing() {
       <HeroSection />
       <StatsSection />
       <FeaturesSection />
-      <SponsorsSection />
+      <SponsorsGridSection />
       <CelebrityJudgesSection />
       <JudgeRecruitmentSection />
       <FAQSection />

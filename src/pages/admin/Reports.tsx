@@ -10,13 +10,13 @@ import { BarChart3, Download, Filter } from 'lucide-react';
 function Reports() {
   // Mock data for charts
   const lineChartData = [
-    { day: 'Day 1', submissions: 25000, evaluations: 15000 },
-    { day: 'Day 2', submissions: 48000, evaluations: 31000 },
-    { day: 'Day 3', submissions: 95000, evaluations: 60000 },
-    { day: 'Day 4', submissions: 220000, evaluations: 140000 },
-    { day: 'Day 5', submissions: 350000, evaluations: 260000 },
-    { day: 'Day 6', submissions: 580000, evaluations: 430000 },
-    { day: 'Day 7', submissions: 1000000, evaluations: 750000 },
+    { day: 'Day 1', name: 'Day 1', submissions: 25000, evaluations: 15000 },
+    { day: 'Day 2', name: 'Day 2', submissions: 48000, evaluations: 31000 },
+    { day: 'Day 3', name: 'Day 3', submissions: 95000, evaluations: 60000 },
+    { day: 'Day 4', name: 'Day 4', submissions: 220000, evaluations: 140000 },
+    { day: 'Day 5', name: 'Day 5', submissions: 350000, evaluations: 260000 },
+    { day: 'Day 6', name: 'Day 6', submissions: 580000, evaluations: 430000 },
+    { day: 'Day 7', name: 'Day 7', submissions: 1000000, evaluations: 750000 },
   ];
 
   const radarData = [
@@ -47,11 +47,69 @@ function Reports() {
     },
   ];
 
-  const heatMapData = Array.from({ length: 5 * 10 }, (_, i) => ({
-    x: i % 10,
-    y: Math.floor(i / 10),
-    value: Math.floor(Math.random() * 10 + 1),
-  }));
+  // Improved heatmap data for score distribution across categories and scoring ranges
+  const heatMapData = [
+    // Score ranges (x) represent 1-10 scale, Categories (y) are different project types
+    // AI/ML Projects
+    { x: 0, y: 0, value: 1.2 }, // 1-2 score range
+    { x: 1, y: 0, value: 2.3 }, // 2-3 score range
+    { x: 2, y: 0, value: 3.1 }, // 3-4 score range
+    { x: 3, y: 0, value: 5.8 }, // 4-5 score range
+    { x: 4, y: 0, value: 7.9 }, // 5-6 score range
+    { x: 5, y: 0, value: 8.4 }, // 6-7 score range
+    { x: 6, y: 0, value: 9.3 }, // 7-8 score range
+    { x: 7, y: 0, value: 9.8 }, // 8-9 score range
+    { x: 8, y: 0, value: 8.5 }, // 9-10 score range
+    { x: 9, y: 0, value: 6.2 }, // 10 score range
+    
+    // Web Applications
+    { x: 0, y: 1, value: 0.5 }, 
+    { x: 1, y: 1, value: 1.2 }, 
+    { x: 2, y: 1, value: 2.7 }, 
+    { x: 3, y: 1, value: 4.8 }, 
+    { x: 4, y: 1, value: 7.6 }, 
+    { x: 5, y: 1, value: 9.2 }, 
+    { x: 6, y: 1, value: 9.0 }, 
+    { x: 7, y: 1, value: 7.1 }, 
+    { x: 8, y: 1, value: 5.5 }, 
+    { x: 9, y: 1, value: 3.8 }, 
+    
+    // Mobile Applications
+    { x: 0, y: 2, value: 0.8 }, 
+    { x: 1, y: 2, value: 1.9 }, 
+    { x: 2, y: 2, value: 3.5 }, 
+    { x: 3, y: 2, value: 5.7 }, 
+    { x: 4, y: 2, value: 8.2 }, 
+    { x: 5, y: 2, value: 9.5 }, 
+    { x: 6, y: 2, value: 8.6 }, 
+    { x: 7, y: 2, value: 6.4 }, 
+    { x: 8, y: 2, value: 4.2 }, 
+    { x: 9, y: 2, value: 2.1 }, 
+    
+    // Developer Tools
+    { x: 0, y: 3, value: 1.1 }, 
+    { x: 1, y: 3, value: 2.0 }, 
+    { x: 2, y: 3, value: 2.8 }, 
+    { x: 3, y: 3, value: 4.2 }, 
+    { x: 4, y: 3, value: 6.7 }, 
+    { x: 5, y: 3, value: 8.5 }, 
+    { x: 6, y: 3, value: 9.7 }, 
+    { x: 7, y: 3, value: 9.2 }, 
+    { x: 8, y: 3, value: 7.5 }, 
+    { x: 9, y: 3, value: 5.1 }, 
+    
+    // Games
+    { x: 0, y: 4, value: 0.3 }, 
+    { x: 1, y: 4, value: 0.9 }, 
+    { x: 2, y: 4, value: 2.5 }, 
+    { x: 3, y: 4, value: 5.1 }, 
+    { x: 4, y: 4, value: 7.3 }, 
+    { x: 5, y: 4, value: 8.8 }, 
+    { x: 6, y: 4, value: 7.9 }, 
+    { x: 7, y: 4, value: 6.2 }, 
+    { x: 8, y: 4, value: 4.7 }, 
+    { x: 9, y: 4, value: 2.5 },
+  ];
 
   // Report types for filtering
   const reportTypes = [
@@ -153,7 +211,9 @@ function Reports() {
               rows={5}
               cols={10}
               xLabel="Score Range (1-10)"
-              yLabel="Categories"
+              yLabel="Project Categories (AI/ML, Web, Mobile, DevTools, Games)"
+              xAxisLabels={["1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", "9-10", "10"]} 
+              yAxisLabels={["AI/ML", "Web", "Mobile", "DevTools", "Games"]}
             />
           </CardContent>
         </Card>
