@@ -138,19 +138,19 @@ function JudgeDashboard() {
                 onClick={() => setShowCalibrationTutorial(true)}
                 variant="outline"
                 size="sm"
-                className="inline-flex items-center justify-center gap-2 min-w-[170px] px-3 border-blue-600 text-blue-500 hover:bg-blue-950 hover:text-blue-400 transition-colors duration-200"
+                className="min-w-[170px] px-3 border-blue-600 text-blue-500 hover:bg-blue-950 hover:text-blue-400 transition-colors duration-200"
+                leftIcon={<Scale size={16} />}
               >
-                <Scale size={16} className="shrink-0 flex-none" />
-                <span className="whitespace-nowrap truncate">Calibration Guide</span>
+                Calibration Guide
               </Button>
               <Button
                 onClick={() => setShowTutorial(true)}
                 variant="outline"
                 size="sm"
-                className="inline-flex items-center justify-center gap-2 min-w-[170px] px-3 border-violet-600 text-violet-500 hover:bg-violet-950 hover:text-violet-400 transition-colors duration-200"
+                className="min-w-[170px] px-3 border-violet-600 text-violet-500 hover:bg-violet-950 hover:text-violet-400 transition-colors duration-200"
+                leftIcon={<Info size={16} />}
               >
-                <Info size={16} className="shrink-0 flex-none" />
-                <span className="whitespace-nowrap truncate">Evaluation Guide</span>
+                Evaluation Guide
               </Button>
             </div>
           </div>

@@ -241,10 +241,10 @@ function JudgeApplication() {
                 <div className="mt-8 flex justify-end">
                   <Button 
                     onClick={nextStep}
-                    className="bg-[#43AFFF] hover:bg-[#3a9ee6] flex items-center"
+                    className="bg-[#43AFFF] hover:bg-[#3a9ee6]"
+                    rightIcon={<ChevronRight size={16} />}
                   >
-                    <span>Continue</span>
-                    <ChevronRight size={16} className="ml-2" />
+                    Continue
                   </Button>
                 </div>
               </>
@@ -319,10 +319,10 @@ function JudgeApplication() {
                   </Button>
                   <Button 
                     onClick={nextStep}
-                    className="bg-[#43AFFF] hover:bg-[#3a9ee6] flex items-center"
+                    className="bg-[#43AFFF] hover:bg-[#3a9ee6]"
+                    rightIcon={<ChevronRight size={16} />}
                   >
-                    <span>Continue</span>
-                    <ChevronRight size={16} className="ml-2" />
+                    Continue
                   </Button>
                 </div>
               </>
@@ -389,9 +389,9 @@ function JudgeApplication() {
                   </Button>
                   <Button 
                     onClick={submitApplication}
-                    className="bg-[#43AFFF] hover:bg-[#3a9ee6] flex items-center"
+                    className="bg-[#43AFFF] hover:bg-[#3a9ee6]"
                   >
-                    <span>Submit Application</span>
+                    Submit Application
                   </Button>
                 </div>
               </>
@@ -431,11 +431,11 @@ function JudgeApplication() {
                   
                   <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
                     <Button 
-                      className="bg-[#43AFFF] hover:bg-[#3a9ee6] flex items-center"
+                      className="bg-[#43AFFF] hover:bg-[#3a9ee6]"
+                      rightIcon={<ChevronRight size={16} />}
                       onClick={() => navigate('/')}
                     >
-                      <span>Return to Homepage</span>
-                      <ChevronRight size={16} className="ml-2" />
+                      Return to Homepage
                     </Button>
                   </div>
                 </div>

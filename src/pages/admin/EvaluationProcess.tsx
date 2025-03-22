@@ -141,11 +141,11 @@ function EvaluationProcess() {
         </div>
         <Button 
           variant="outline"
-          className="flex items-center gap-2 mt-4 md:mt-0"
+          className="mt-4 md:mt-0"
           onClick={() => setShowTutorial(true)}
+          leftIcon={<Info size={16} />}
         >
-          <Info size={16} />
-          <span>View Process Overview</span>
+          View Process Overview
         </Button>
       </motion.div>
 
@@ -161,11 +161,11 @@ function EvaluationProcess() {
               <Button 
                 variant="ghost"
                 size="sm"
-                className="flex items-center gap-1 text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-white"
                 onClick={() => setShowTutorial(true)}
+                leftIcon={<HelpCircle size={14} />}
               >
-                <HelpCircle size={14} />
-                <span className="text-xs">How the process works</span>
+                How the process works
               </Button>
             </div>
           </CardHeader>
@@ -297,28 +297,22 @@ function EvaluationProcess() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <Button className="w-full justify-start" variant="outline">
-                <Filter size={16} className="mr-2" />
+              <Button className="w-full justify-start" variant="outline" leftIcon={<Filter size={16} />}>
                 Adjust Triage Thresholds
               </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <CheckSquare size={16} className="mr-2" />
+              <Button className="w-full justify-start" variant="outline" leftIcon={<CheckSquare size={16} />}>
                 Update Scoring Criteria
               </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <Users size={16} className="mr-2" />
+              <Button className="w-full justify-start" variant="outline" leftIcon={<Users size={16} />}>
                 Manage Judge Assignments
               </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <AlertTriangle size={16} className="mr-2" />
+              <Button className="w-full justify-start" variant="outline" leftIcon={<AlertTriangle size={16} />}>
                 Review Flagged Submissions
               </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <Scale size={16} className="mr-2" />
+              <Button className="w-full justify-start" variant="outline" leftIcon={<Scale size={16} />}>
                 Calibrate Judge Scores
               </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <BarChart3 size={16} className="mr-2" />
+              <Button className="w-full justify-start" variant="outline" leftIcon={<BarChart3 size={16} />}>
                 Generate Status Report
               </Button>
             </div>

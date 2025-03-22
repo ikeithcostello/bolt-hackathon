@@ -97,18 +97,18 @@ function ParticipantDashboard() {
                 <Button 
                   variant="outline" 
                   onClick={() => setShowCalibrationTutorial(true)}
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="w-full sm:w-auto"
                   size="sm"
+                  leftIcon={<Scale size={16} />}
                 >
-                  <Scale size={16} />
-                  <span>Evaluation System</span>
+                  Evaluation System
                 </Button>
                 <Button 
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="w-full sm:w-auto"
                   size="sm"
+                  leftIcon={<PlusCircle size={16} />}
                 >
-                  <PlusCircle size={16} />
-                  <span>Submit Project</span>
+                  Submit Project
                 </Button>
               </div>
             </div>
@@ -127,11 +127,11 @@ function ParticipantDashboard() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="flex items-center gap-1 text-gray-400 hover:text-white mt-2 sm:mt-0 px-0 sm:px-2"
+              className="text-gray-400 hover:text-white mt-2 sm:mt-0 px-0 sm:px-2"
               onClick={() => setShowCalibrationTutorial(true)}
+              leftIcon={<Info size={14} />}
             >
-              <Info size={14} />
-              <span className="text-xs">How projects are evaluated</span>
+              How projects are evaluated
             </Button>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
@@ -144,11 +144,11 @@ function ParticipantDashboard() {
                 </div>
                 <Button 
                   variant="outline" 
-                  className="mt-3 md:mt-0 w-full sm:w-auto text-sm flex items-center"
+                  className="mt-3 md:mt-0 w-full sm:w-auto text-sm"
                   size="sm"
+                  rightIcon={<ChevronRight size={14} />}
                 >
-                  <span>View Details</span>
-                  <ChevronRight size={14} className="ml-1" />
+                  View Details
                 </Button>
               </div>
               <Timeline steps={steps} />
