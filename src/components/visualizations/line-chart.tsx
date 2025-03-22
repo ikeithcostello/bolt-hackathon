@@ -61,7 +61,11 @@ export function LineChart({ data, lines, xAxisDataKey, title, xLabel, yLabel }: 
               }} 
               itemStyle={{ color: '#F8F8F8' }}
             />
-            <Legend wrapperStyle={{ color: '#A0A0A0' }} />
+            <Legend 
+              wrapperStyle={{ color: '#A0A0A0', paddingTop: '20px' }}
+              verticalAlign="bottom"
+              height={36}
+            />
             {lines.map((line, index) => (
               <Line
                 key={index}

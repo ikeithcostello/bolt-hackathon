@@ -190,9 +190,9 @@ export function Sidebar({ role }: SidebarProps) {
           <div className="flex items-start mb-2">
             <Zap className="h-5 w-5 text-[#43AFFF] mr-2 shrink-0 mt-1" />
             <div>
-              <h2 className="text-xl font-bold text-white whitespace-nowrap relative z-30" style={{ maxWidth: 'unset' }}>
-                World's Largest Hackathon
-              </h2>
+              <h1 className="text-2xl font-bold text-white whitespace-nowrap relative z-30" style={{ maxWidth: 'unset' }}>
+                World's Largest <br/>Hackathon
+              </h1>
               <p className="text-sm text-gray-400 mt-1">
                 Powered by StackBlitz
               </p>

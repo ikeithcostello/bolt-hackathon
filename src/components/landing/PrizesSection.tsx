@@ -16,6 +16,13 @@ export function PrizesSection() {
   // Format total prize amount with commas
   const formattedTotal = totalPrizeAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   
+  // Motion settings - consistent with other components
+  const springTransition = { 
+    type: "spring", 
+    stiffness: 300, 
+    damping: 20 
+  };
+  
   return (
     <div className="py-16 lg:py-24 bg-gradient-to-b from-background-secondary via-[#252A34] to-[#20253D]" id="prizes">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -77,9 +84,10 @@ export function PrizesSection() {
                 .map(prize => (
                   <motion.div
                     key={prize.id}
-                    whileHover={{ y: -5 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                    className="bg-gradient-to-br from-blue-800/30 via-blue-700/20 to-blue-900/30 rounded-xl p-1 max-w-lg w-full mx-auto shadow-xl"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={springTransition}
+                    className="bg-gradient-to-br from-blue-800/30 via-blue-700/20 to-blue-900/30 rounded-xl p-1 max-w-lg w-full mx-auto shadow-xl transform-gpu"
                   >
                     <div className="bg-background-primary/90 backdrop-blur-sm rounded-lg p-8 text-center h-full border border-white/5">
                       <div className="absolute top-0 right-0 -mt-3 -mr-3">
@@ -135,8 +143,9 @@ export function PrizesSection() {
                   whileInView={{ opacity: 1, scale: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.1 + (index * 0.1) }}
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="bg-gradient-to-br from-blue-900/20 to-blue-800/20 rounded-lg shadow-lg overflow-hidden border border-gray-800/60 transform transition-all duration-300"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="bg-gradient-to-br from-blue-900/20 to-blue-800/20 rounded-lg shadow-lg overflow-hidden border border-gray-800/60 transform-gpu transition-all duration-300"
                 >
                   <div className="relative p-6">
                     <div className="absolute top-0 right-0 bg-blue-500/10 w-20 h-20 rounded-full blur-xl -mr-10 -mt-10 z-0"></div>

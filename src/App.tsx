@@ -1,6 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { initializeGA, pageview } from './lib/analytics';
 
 // Layout
 import MainLayout from './layouts/MainLayout';
@@ -39,17 +41,36 @@ import ParticipantSubmissions from './pages/participant/Submissions';
 import ParticipantLeaderboard from './pages/participant/Leaderboard';
 import ParticipantAwards from './pages/participant/Awards';
 import ParticipantSettings from './pages/participant/Settings';
+import SubmitProjectPage from './pages/participant/SubmitProject';
 
 // Create a client
 const queryClient = new QueryClient();
+
+// Analytics wrapper component
+function AnalyticsWrapper({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Initialize GA when the app loads
+    initializeGA();
+  }, []);
+
+  useEffect(() => {
+    // Track page views when the route changes
+    pageview(location.pathname + location.search);
+  }, [location]);
+
+  return <>{children}</>;
+}
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Landing />} />
+        <AnalyticsWrapper>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/judge/apply" element={<JudgeApplication />} />
           <Route path="/login" element={<Login />} />
@@ -85,6 +106,7 @@ function App() {
           <Route path="/participant" element={<MainLayout role="participant" />}>
             <Route index element={<ParticipantDashboard />} />
             <Route path="submissions" element={<ParticipantSubmissions />} />
+            <Route path="submit-project" element={<SubmitProjectPage />} />
             <Route path="leaderboard" element={<ParticipantLeaderboard />} />
             <Route path="awards" element={<ParticipantAwards />} />
             <Route path="settings" element={<ParticipantSettings />} />
@@ -92,7 +114,8 @@ function App() {
 
           {/* 404 route */}
           <Route path="*" element={<NotFound />} />
-        </Routes>
+          </Routes>
+        </AnalyticsWrapper>
       </Router>
     </QueryClientProvider>
   );

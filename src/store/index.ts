@@ -58,7 +58,7 @@ export const useAppStore = create<AppState>((set) => ({
       id: '2',
       name: 'AI/ML Excellence',
       description: 'Most innovative use of artificial intelligence',
-      amount: '$150,000',
+      amount: '$100,000',
       category: 'AI/ML',
       sponsor: 'Stackblitz',
       logoUrl: STACKBLITZ
@@ -94,7 +94,7 @@ export const useAppStore = create<AppState>((set) => ({
       id: '6',
       name: 'Gaming Excellence',
       description: 'Most engaging and innovative game',
-      amount: '$100,000',
+      amount: '$75,000',
       category: 'Games',
       sponsor: 'Stackblitz',
       logoUrl: STACKBLITZ

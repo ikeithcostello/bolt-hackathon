@@ -107,6 +107,7 @@ function ParticipantDashboard() {
                   className="w-full sm:w-auto"
                   size="sm"
                   leftIcon={<PlusCircle size={16} />}
+                  onClick={() => window.location.href = '/participant/submit-project'}
                 >
                   Submit Project
                 </Button>

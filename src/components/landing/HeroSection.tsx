@@ -11,7 +11,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ 
   title = "The World's Largest Hackathon",
-  subtitle = "Join developers worldwide in building innovative solutions to compete for our $1M prize pool. Be part of history with the world's largest coding event."
+  subtitle = "Join developers worldwide in building innovative solutions to compete for our $1M prize pool. Be part of the largest coding event in history."
 }: HeroSectionProps) {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -86,18 +86,31 @@ export function HeroSection({
           
           {/* Desktop Buttons */}
           <div className="hidden md:block">
-            <Button 
-              variant="outline" 
-              className="mr-2"
-              onClick={() => navigate('/login')}
+            <motion.div 
+              className="inline-block mr-2"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              Log In
-            </Button>
-            <Button 
-              onClick={() => navigate('/register')}
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/login')}
+              >
+                Log In
+              </Button>
+            </motion.div>
+            <motion.div 
+              className="inline-block"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              Sign Up
-            </Button>
+              <Button 
+                onClick={() => navigate('/register')}
+              >
+                Sign Up
+              </Button>
+            </motion.div>
           </div>
           
           {/* Mobile Menu Button */}
@@ -179,25 +192,37 @@ export function HeroSection({
                 </a>
                 
                 <div className="flex flex-col space-y-3 pt-4">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      navigate('/login');
-                    }}
-                    className="w-full"
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    Log In
-                  </Button>
-                  <Button 
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      navigate('/register');
-                    }}
-                    className="w-full"
+                    <Button 
+                      variant="outline" 
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        navigate('/login');
+                      }}
+                      className="w-full"
+                    >
+                      Log In
+                    </Button>
+                  </motion.div>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    Sign Up
-                  </Button>
+                    <Button 
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        navigate('/register');
+                      }}
+                      className="w-full"
+                    >
+                      Sign Up
+                    </Button>
+                  </motion.div>
                 </div>
               </div>
             </motion.div>
@@ -259,21 +284,33 @@ export function HeroSection({
             </div>
             
             <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-              <Button 
-                size="lg" 
-                className="text-base bg-[#43AFFF] hover:bg-[#3a9ee6] w-full sm:w-auto"
-                onClick={() => navigate('/register')}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                Register
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="text-base bg-background-primary/50 hover:bg-background-primary/70 w-full sm:w-auto"
-                onClick={() => navigate('/judge/apply')}
+                <Button 
+                  size="lg" 
+                  className="text-base bg-[#43AFFF] hover:bg-[#3a9ee6] w-full sm:w-auto"
+                  onClick={() => navigate('/register')}
+                >
+                  Register
+                </Button>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                Become a Judge
-              </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="text-base bg-background-primary/50 hover:bg-background-primary/70 w-full sm:w-auto"
+                  onClick={() => navigate('/judge/apply')}
+                >
+                  Become a Judge
+                </Button>
+              </motion.div>
             </div>
           </div>
         </motion.div>

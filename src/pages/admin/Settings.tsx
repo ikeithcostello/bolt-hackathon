@@ -116,7 +116,10 @@ function CategoryManagementModal({
                 onClick={handleAddCategory}
                 className="px-3 py-2"
               >
-                Add
+                <span className="flex items-center">
+                  <Plus size={16} className="mr-1" />
+                  Add
+                </span>
               </Button>
             </div>
           </div>
@@ -147,12 +150,18 @@ function CategoryManagementModal({
               variant="outline" 
               onClick={onClose}
             >
-              Cancel
+              <span className="flex items-center">
+                <X size={16} className="mr-1" />
+                Cancel
+              </span>
             </Button>
             <Button 
               onClick={handleSave}
             >
-              Save Changes
+              <span className="flex items-center">
+                <Save size={16} className="mr-1" />
+                Save Changes
+              </span>
             </Button>
           </div>
         </div>
@@ -1362,8 +1371,10 @@ function Settings() {
                       variant="outline"
                       className="text-sm px-2 py-1 h-8 inline-flex items-center gap-1.5"
                     >
-                      <Edit size={14} aria-hidden="true" />
-                      <span>Manage in Modal</span>
+                      <span className="flex items-center">
+                        <Edit size={14} aria-hidden="true" />
+                        <span className="ml-1.5">Manage in Modal</span>
+                      </span>
                     </Button>
                   </div>
                   <p className="text-sm text-gray-400 mb-4">
@@ -1387,8 +1398,10 @@ function Settings() {
                         onClick={handleAddProjectCategory}
                         size="sm"
                       >
-                        <Plus size={16} className="mr-1" />
-                        Add
+                        <span className="flex items-center">
+                          <Plus size={16} className="mr-1" />
+                          Add
+                        </span>
                       </Button>
                     </div>
                     
@@ -1419,8 +1432,10 @@ function Settings() {
                       variant="outline"
                       className="text-sm px-2 py-1 h-8 inline-flex items-center gap-1.5"
                     >
-                      <Edit size={14} aria-hidden="true" />
-                      <span>Manage in Modal</span>
+                      <span className="flex items-center">
+                        <Edit size={14} aria-hidden="true" />
+                        <span className="ml-1.5">Manage in Modal</span>
+                      </span>
                     </Button>
                   </div>
                   <p className="text-sm text-gray-400 mb-4">
@@ -1443,8 +1458,10 @@ function Settings() {
                         onClick={handleAddEvaluationCategory}
                         size="sm"
                       >
-                        <Plus size={16} className="mr-1" />
-                        Add
+                        <span className="flex items-center">
+                          <Plus size={16} className="mr-1" />
+                          Add
+                        </span>
                       </Button>
                     </div>
                     
@@ -1470,8 +1487,10 @@ function Settings() {
                 
                 <div className="flex justify-end">
                   <Button>
-                    <Save size={16} className="mr-2" />
-                    Save Changes
+                    <span className="flex items-center">
+                      <Save size={16} className="mr-2" />
+                      Save Changes
+                    </span>
                   </Button>
                 </div>
               </CardContent>

@@ -2,7 +2,8 @@
 import PIETER_LEVELS from './judges/levels.jpg';
 import GREG_ISENBERG from './judges/isenberg.jpg';
 import LOGAN_KILPATRICK from './judges/logank.jpg';
-import EVAN_YOU from './judges/evanyou.jpg';
+import KP from './judges/KP.jpg';
+import STEPH_SMITH from './judges/stephsmith.jpg';
 
 // Import local sponsor images
 import STACKBLITZ from './sponsors/stackblitz.jpg';
@@ -17,7 +18,8 @@ export {
   PIETER_LEVELS,
   GREG_ISENBERG,
   LOGAN_KILPATRICK,
-  EVAN_YOU,
+  KP,
+  STEPH_SMITH,
   
   // Sponsor images
   STACKBLITZ,

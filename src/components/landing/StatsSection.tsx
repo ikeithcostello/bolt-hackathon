@@ -15,7 +15,7 @@ export function StatsSection({
     { value: '200K+', label: 'Submissions' },
     { value: '$1M+', label: 'Prize Pool' },
     { value: '90+', label: 'Countries' },
-    { value: '1250', label: 'Judges' }
+    { value: '1,250', label: 'Judges' }
   ]
 }: StatsSectionProps) {
   return (

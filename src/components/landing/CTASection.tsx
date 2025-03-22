@@ -102,15 +102,21 @@ export function CTASection({
             transition={{ duration: 0.5, delay: 0.6 }}
             className="flex justify-center"
           >
-            <Button 
-              size="lg" 
-              className="bg-white text-accent-blue hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-8 py-6 h-auto font-bold inline-flex items-center"
-              onClick={() => navigate(buttonLink)}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              <span className="flex items-center">
-                {buttonText} <ChevronRight className="ml-2" size={18} />
-              </span>
-            </Button>
+              <Button 
+                size="lg" 
+                className="bg-white text-accent-blue hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-8 py-6 h-auto font-bold inline-flex items-center"
+                onClick={() => navigate(buttonLink)}
+              >
+                <span className="flex items-center">
+                  {buttonText} <ChevronRight className="ml-2" size={18} />
+                </span>
+              </Button>
+            </motion.div>
           </motion.div>
           
           <motion.div

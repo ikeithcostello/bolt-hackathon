@@ -8,14 +8,16 @@ import { HeatMap } from '@/components/visualizations/heat-map';
 import { LineChart } from '@/components/visualizations/line-chart';
 import { useAppStore } from '@/store';
 import { Button } from '@/components/ui/button';
-import { Info, Scale } from 'lucide-react';
+import { Info, Scale, BarChart3 } from 'lucide-react';
 import { EvaluationProcessTutorial } from '../../components/tutorials/EvaluationProcessTutorial';
 import { JudgeCalibrationTutorial } from '../../components/tutorials/JudgeCalibrationTutorial';
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
   const { dashboardStats, projectCategories, evaluationCategories } = useAppStore();
   const [showTutorial, setShowTutorial] = useState(false);
   const [showCalibrationTutorial, setShowCalibrationTutorial] = useState(false);
+  const navigate = useNavigate();
   
   // Show tutorial on first visit (using localStorage to track)
   useEffect(() => {
@@ -107,6 +109,15 @@ function Dashboard() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-0">Admin Portal</h1>
             <div className="flex flex-col sm:flex-row gap-2 mt-3 sm:mt-0">
+              <Button
+                onClick={() => navigate('/admin/reports')}
+                variant="outline"
+                size="sm"
+                className="min-w-[170px] px-3 border-teal-600 text-teal-500 hover:bg-teal-950 hover:text-teal-400 transition-colors duration-200"
+                leftIcon={<BarChart3 size={16} />}
+              >
+                View Detailed Reports
+              </Button>
               <Button
                 onClick={() => setShowCalibrationTutorial(true)}
                 variant="outline"
