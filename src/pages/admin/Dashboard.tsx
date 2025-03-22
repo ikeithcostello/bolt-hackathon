@@ -8,13 +8,12 @@ import { HeatMap } from '@/components/visualizations/heat-map';
 import { LineChart } from '@/components/visualizations/line-chart';
 import { useAppStore } from '@/store';
 import { Button } from '@/components/ui/button';
-import { Info, Filter, CheckSquare, ClipboardList, Medal, Trophy, Scale } from 'lucide-react';
+import { Info, Scale } from 'lucide-react';
 import { EvaluationProcessTutorial } from '../../components/tutorials/EvaluationProcessTutorial';
 import { JudgeCalibrationTutorial } from '../../components/tutorials/JudgeCalibrationTutorial';
-import { Link } from 'react-router-dom';
 
 function Dashboard() {
-  const { dashboardStats } = useAppStore();
+  const { dashboardStats, projectCategories, evaluationCategories } = useAppStore();
   const [showTutorial, setShowTutorial] = useState(false);
   const [showCalibrationTutorial, setShowCalibrationTutorial] = useState(false);
   
@@ -75,58 +74,26 @@ function Dashboard() {
     { x: 7.2, y: 3.5, z: 220, name: 'Project H' },
     { x: 8.1, y: 5.9, z: 280, name: 'Project I' },
   ];
-
-  // Mock data for heat map - replaced random data with realistic score distribution
-  // Represents scores for different criteria (x) across different project categories (y)
-  const heatMapData = [
-    // Innovation scores
-    { x: 0, y: 0, value: 8.4 }, // AI/ML
-    { x: 1, y: 0, value: 7.9 }, // Web Apps
-    { x: 2, y: 0, value: 6.3 }, // Mobile
-    { x: 3, y: 0, value: 9.1 }, // DevTools
-    { x: 4, y: 0, value: 7.5 }, // Games
-    { x: 5, y: 0, value: 5.8 }, // IoT
+  
+  // Generate heatmap data dynamically based on the categories
+  const generateHeatMapData = () => {
+    const data = [];
+    const rows = evaluationCategories.length;
+    const cols = projectCategories.length;
     
-    // Technical Complexity scores
-    { x: 0, y: 1, value: 9.2 }, // AI/ML
-    { x: 1, y: 1, value: 6.7 }, // Web Apps
-    { x: 2, y: 1, value: 7.1 }, // Mobile
-    { x: 3, y: 1, value: 8.8 }, // DevTools
-    { x: 4, y: 1, value: 6.9 }, // Games
-    { x: 5, y: 1, value: 7.7 }, // IoT
+    for (let x = 0; x < cols; x++) {
+      for (let y = 0; y < rows; y++) {
+        // Generate random score between 5.0 and 9.5
+        const value = Math.round((5 + Math.random() * 4.5) * 10) / 10;
+        data.push({ x, y, value });
+      }
+    }
     
-    // Design scores
-    { x: 0, y: 2, value: 6.2 }, // AI/ML
-    { x: 1, y: 2, value: 8.3 }, // Web Apps
-    { x: 2, y: 2, value: 8.5 }, // Mobile
-    { x: 3, y: 2, value: 7.4 }, // DevTools
-    { x: 4, y: 2, value: 9.0 }, // Games
-    { x: 5, y: 2, value: 5.9 }, // IoT
-    
-    // User Experience scores
-    { x: 0, y: 3, value: 5.7 }, // AI/ML
-    { x: 1, y: 3, value: 8.9 }, // Web Apps
-    { x: 2, y: 3, value: 9.2 }, // Mobile
-    { x: 3, y: 3, value: 7.0 }, // DevTools
-    { x: 4, y: 3, value: 8.8 }, // Games
-    { x: 5, y: 3, value: 6.1 }, // IoT
-    
-    // Impact scores
-    { x: 0, y: 4, value: 9.5 }, // AI/ML
-    { x: 1, y: 4, value: 7.8 }, // Web Apps
-    { x: 2, y: 4, value: 7.4 }, // Mobile
-    { x: 3, y: 4, value: 8.2 }, // DevTools
-    { x: 4, y: 4, value: 6.5 }, // Games
-    { x: 5, y: 4, value: 8.7 }, // IoT
-    
-    // Popularity scores
-    { x: 0, y: 5, value: 8.1 }, // AI/ML
-    { x: 1, y: 5, value: 8.5 }, // Web Apps
-    { x: 2, y: 5, value: 7.2 }, // Mobile
-    { x: 3, y: 5, value: 6.8 }, // DevTools
-    { x: 4, y: 5, value: 9.3 }, // Games
-    { x: 5, y: 5, value: 7.0 }, // IoT
-  ];
+    return data;
+  };
+  
+  // Dynamic heatmap data
+  const heatMapData = generateHeatMapData();
 
   return (
     <div className="space-y-6">
@@ -229,103 +196,24 @@ function Dashboard() {
         </Card>
 
         <Card>
-          <CardHeader className="px-4 sm:px-6 py-3 sm:py-4">
-            <CardTitle className="text-lg sm:text-xl">Score Distribution Heatmap</CardTitle>
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-3 sm:py-4">
+            <CardTitle className="text-lg sm:text-xl mb-2 sm:mb-0">Score Distribution Heatmap</CardTitle>
+            <div className="text-sm text-gray-400">
+              Showing patterns across categories
+            </div>
           </CardHeader>
           <CardContent className="px-0 py-0 overflow-x-auto">
             <div className="min-w-[400px]">
               <HeatMap
                 data={heatMapData}
                 title=""
-                rows={6}
-                cols={6}
+                rows={evaluationCategories.length}
+                cols={projectCategories.length}
                 xLabel="Project Categories"
                 yLabel="Evaluation Criteria"
-                xAxisLabels={["AI/ML", "Web", "Mobile", "DevTools", "Games", "IoT"]}
-                yAxisLabels={["Innovation", "Technical", "Design", "UX", "Impact", "Popularity"]}
+                xAxisLabels={projectCategories}
+                yAxisLabels={evaluationCategories}
               />
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-      
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.15 }}
-      >
-        <Card>
-          <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-3 sm:py-4">
-            <CardTitle className="text-lg sm:text-xl mb-2 sm:mb-0">Evaluation Process Overview</CardTitle>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setShowTutorial(true)}
-              className="w-full sm:w-auto border-violet-600 text-violet-500 hover:bg-violet-950 hover:text-violet-400 transition-colors duration-200 inline-flex items-center justify-center"
-            >
-              <Info size={16} className="mr-2 shrink-0" />
-              <span className="whitespace-nowrap">How it works</span>
-            </Button>
-          </CardHeader>
-          <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-            <div className="flex flex-col space-y-4">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
-                <Link to="/admin/evaluation-process" className="block no-underline">
-                  <div className="flex flex-col items-center gap-2 p-2 sm:p-3 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md cursor-pointer text-center">
-                    <Filter size={20} className="text-blue-400" />
-                    <span className="text-xs sm:text-sm font-medium">Initial Triage</span>
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <span className="text-xs text-green-400">75%</span>
-                    </div>
-                  </div>
-                </Link>
-                <Link to="/admin/evaluation-process" className="block no-underline">
-                  <div className="flex flex-col items-center gap-2 p-2 sm:p-3 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md cursor-pointer text-center">
-                    <CheckSquare size={20} className="text-green-400" />
-                    <span className="text-xs sm:text-sm font-medium">Preliminary</span>
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <span className="text-xs text-green-400">70%</span>
-                    </div>
-                  </div>
-                </Link>
-                <Link to="/admin/evaluation-process" className="block no-underline">
-                  <div className="flex flex-col items-center gap-2 p-2 sm:p-3 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md cursor-pointer text-center">
-                    <ClipboardList size={20} className="text-purple-400" />
-                    <span className="text-xs sm:text-sm font-medium">Detailed</span>
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <span className="text-xs text-amber-400">65%</span>
-                    </div>
-                  </div>
-                </Link>
-                <Link to="/admin/evaluation-process" className="block no-underline">
-                  <div className="flex flex-col items-center gap-2 p-2 sm:p-3 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md cursor-pointer text-center">
-                    <Medal size={20} className="text-amber-400" />
-                    <span className="text-xs sm:text-sm font-medium">Semi-Finals</span>
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <span className="text-xs text-orange-400">60%</span>
-                    </div>
-                  </div>
-                </Link>
-                <Link to="/admin/evaluation-process" className="block no-underline">
-                  <div className="flex flex-col items-center gap-2 p-2 sm:p-3 bg-gray-800 hover:bg-gray-700 transition-colors rounded-md cursor-pointer text-center">
-                    <Trophy size={20} className="text-yellow-400" />
-                    <span className="text-xs sm:text-sm font-medium">Finals</span>
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <span className="text-xs text-red-400">50%</span>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-              <div className="flex justify-end">
-                <Link to="/admin/evaluation-process">
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                  >
-                    View Full Process
-                  </Button>
-                </Link>
-              </div>
             </div>
           </CardContent>
         </Card>

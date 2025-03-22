@@ -8,4 +8,5 @@ export * from './CelebrityJudgesSection';
 export * from './JudgeRecruitmentSection';
 export * from './FAQSection';
 export * from './CTASection';
-export * from './Footer'; 
+export * from './Footer';
+export * from './PrizesSection'; 

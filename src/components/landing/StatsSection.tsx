@@ -13,13 +13,13 @@ interface StatsSectionProps {
 export function StatsSection({ 
   stats = [
     { value: '200K+', label: 'Submissions' },
-    { value: '$1M', label: 'Prize Pool' },
+    { value: '$1M+', label: 'Prize Pool' },
     { value: '90+', label: 'Countries' },
-    { value: '1,250', label: 'Judges' }
+    { value: '1250', label: 'Judges' }
   ]
 }: StatsSectionProps) {
   return (
-    <div className="bg-background-secondary pt-6 pb-12">
+    <div className="bg-gradient-to-b from-background-primary to-background-secondary pt-6 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {stats.map((stat, index) => (

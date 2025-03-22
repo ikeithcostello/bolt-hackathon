@@ -139,7 +139,7 @@ export function HeatMap({
       <div className="flex flex-col">
         {/* X-axis header with tooltip if available */}
         {xLabel && (
-          <div className="flex justify-center mb-2">
+          <div className="flex justify-center mb-3">
             <h4 className="text-sm font-medium text-gray-300 flex items-center">
               <span>Column Categories</span>
               {xCategories.length > 0 && (
@@ -160,21 +160,21 @@ export function HeatMap({
           </div>
         )}
         
-        {/* X-axis labels (top) */}
-        <div className="flex ml-16">
+        {/* X-axis labels (top) with increased padding */}
+        <div className="flex ml-16 mb-4">
           {xLabels.map((label, i) => (
             <div key={`x-label-${i}`} className="flex-1 text-center">
-              <span className="text-sm font-medium text-gray-200 px-1.5 py-0.5 rounded bg-gray-800/50">
+              <span className="text-sm font-medium text-gray-200 px-2 py-1 rounded bg-gray-800/50">
                 {label}
               </span>
             </div>
           ))}
         </div>
         
-        <div className="flex mt-2">
+        <div className="flex">
           {/* Y-axis header with tooltip */}
           {yLabel && (
-            <div className="w-16 mr-2">
+            <div className="w-16 mr-3">
               <div className="flex items-center h-full -rotate-90 origin-center transform-gpu">
                 <h4 className="text-sm font-medium text-gray-300 whitespace-nowrap flex items-center">
                   <span>Row Categories</span>
@@ -197,11 +197,11 @@ export function HeatMap({
             </div>
           )}
           
-          {/* Y-axis labels (left side) */}
-          <div className="flex flex-col justify-around pr-2 w-14">
+          {/* Y-axis labels (left side) with increased padding */}
+          <div className="flex flex-col justify-around pr-4 w-16">
             {yLabels.map((label, i) => (
               <div key={`y-label-${i}`} className="text-sm font-medium text-gray-200 h-10 flex items-center justify-end">
-                <span className="px-1.5 py-0.5 rounded bg-gray-800/50">
+                <span className="px-2 py-1 rounded bg-gray-800/50">
                   {label}
                 </span>
               </div>
@@ -254,21 +254,20 @@ export function HeatMap({
       </div>
       
       {/* Improved legend with gradient */}
-      <div className="mt-8 pb-3">
-        <p className="text-sm font-medium text-gray-300 mb-2">Score Intensity:</p>
-        <div className="flex items-center">
+      <div className="mt-20 pb-3">
+        <div className="flex items-center relative mb-4">
           <div className="flex-grow h-6 rounded-md relative" style={{
             background: `linear-gradient(to right, ${legendColors.map(c => c.color).join(', ')})`,
             boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
           }}>
-            {/* Legend markers */}
+            {/* Legend markers with increased spacing */}
             {legendColors.map((color, i) => (
               <div 
                 key={i} 
-                className="absolute bottom-full pb-1"
+                className="absolute bottom-full pb-2"
                 style={{ left: `${(color.value / 10) * 100}%`, transform: 'translateX(-50%)' }}
               >
-                <div className="w-0.5 h-3 bg-gray-300 mb-1 mx-auto"></div>
+                <div className="w-0.5 h-4 bg-gray-300 mb-1 mx-auto"></div>
                 <span className="text-sm font-medium text-gray-300 whitespace-nowrap">
                   {color.value.toFixed(1)}
                 </span>
@@ -276,6 +275,17 @@ export function HeatMap({
             ))}
           </div>
         </div>
+        
+        {/* Score intensity explanation moved below the gradient bar */}
+        <p className="text-sm font-medium text-gray-300 mb-2">
+          Score Intensity: <span className="text-gray-400">(Higher values = more intense color, scale of 0-10)</span>
+        </p>
+        
+        <p className="text-xs text-gray-400 mt-2">
+          This visualization shows the intensity of scores across different categories. 
+          Blue indicates lower values, while red indicates higher values.
+          The intensity ranges from 0 (lowest) to 10 (highest).
+        </p>
       </div>
     </div>
   );

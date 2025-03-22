@@ -6,7 +6,8 @@ import {
   JudgeRecruitmentSection,
   FAQSection,
   CTASection,
-  Footer
+  Footer,
+  PrizesSection
 } from '../components/landing';
 
 import { SponsorsGridSection } from '@/components/landing/SponsorsGridSection';
@@ -20,6 +21,7 @@ function Landing() {
       <StatsSection />
       <FeaturesSection />
       <SponsorsGridSection />
+      <PrizesSection />
       <CelebrityJudgesSection />
       <JudgeRecruitmentSection />
       <FAQSection />

@@ -12,7 +12,8 @@ import {
   User,
   Camera,
   ExternalLink,
-  Lock
+  Lock,
+  Check
 } from 'lucide-react';
 
 // Define the possible settings sections
@@ -26,6 +27,9 @@ function Settings() {
     showTeamMembers: true,
     allowProjectDiscovery: true
   });
+  
+  // State for areas of expertise/interests
+  const [interests, setInterests] = useState<string[]>(['ai', 'sustainability', 'web3']);
   
   // State to track the active settings section
   const [activeSection, setActiveSection] = useState<SettingsSection>('profile');
@@ -65,58 +69,55 @@ function Settings() {
         >
           <Card>
             <CardContent className="p-0">
-              <ul className="divide-y divide-gray-800">
-                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'profile' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
-                  <a 
-                    href="#" 
-                    onClick={handleNavClick('profile')}
-                    className={`flex items-center ${activeSection === 'profile' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
-                  >
-                    <User className="mr-2" size={18} />
-                    <span>Profile</span>
-                  </a>
-                </li>
-                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'security' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
-                  <a 
-                    href="#" 
-                    onClick={handleNavClick('security')}
-                    className={`flex items-center ${activeSection === 'security' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
-                  >
-                    <Key className="mr-2" size={18} />
-                    <span>Security</span>
-                  </a>
-                </li>
-                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'notifications' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
-                  <a 
-                    href="#" 
-                    onClick={handleNavClick('notifications')}
-                    className={`flex items-center ${activeSection === 'notifications' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
-                  >
-                    <Bell className="mr-2" size={18} />
-                    <span>Notifications</span>
-                  </a>
-                </li>
-                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'appearance' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
-                  <a 
-                    href="#" 
-                    onClick={handleNavClick('appearance')}
-                    className={`flex items-center ${activeSection === 'appearance' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
-                  >
-                    <Moon className="mr-2" size={18} />
-                    <span>Appearance</span>
-                  </a>
-                </li>
-                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'privacy' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
-                  <a 
-                    href="#" 
-                    onClick={handleNavClick('privacy')}
-                    className={`flex items-center ${activeSection === 'privacy' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
-                  >
-                    <Lock className="mr-2" size={18} />
-                    <span>Privacy</span>
-                  </a>
-                </li>
-              </ul>
+              <nav>
+                <ul className="divide-y divide-gray-800">
+                  <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'profile' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                    <button 
+                      onClick={handleNavClick('profile')}
+                      className={`flex items-center w-full text-left ${activeSection === 'profile' ? 'text-accent-blue font-medium' : 'text-gray-300 hover:text-white'}`}
+                    >
+                      <User className="mr-2" size={18} />
+                      <span>Profile</span>
+                    </button>
+                  </li>
+                  <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'security' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                    <button 
+                      onClick={handleNavClick('security')}
+                      className={`flex items-center w-full text-left ${activeSection === 'security' ? 'text-accent-blue font-medium' : 'text-gray-300 hover:text-white'}`}
+                    >
+                      <Key className="mr-2" size={18} />
+                      <span>Security</span>
+                    </button>
+                  </li>
+                  <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'notifications' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                    <button
+                      onClick={handleNavClick('notifications')}
+                      className={`flex items-center w-full text-left ${activeSection === 'notifications' ? 'text-accent-blue font-medium' : 'text-gray-300 hover:text-white'}`}
+                    >
+                      <Bell className="mr-2" size={18} />
+                      <span>Notifications</span>
+                    </button>
+                  </li>
+                  <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'appearance' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                    <button
+                      onClick={handleNavClick('appearance')}
+                      className={`flex items-center w-full text-left ${activeSection === 'appearance' ? 'text-accent-blue font-medium' : 'text-gray-300 hover:text-white'}`}
+                    >
+                      <Moon className="mr-2" size={18} />
+                      <span>Appearance</span>
+                    </button>
+                  </li>
+                  <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'privacy' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                    <button
+                      onClick={handleNavClick('privacy')}
+                      className={`flex items-center w-full text-left ${activeSection === 'privacy' ? 'text-accent-blue font-medium' : 'text-gray-300 hover:text-white'}`}
+                    >
+                      <Lock className="mr-2" size={18} />
+                      <span>Privacy</span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
             </CardContent>
           </Card>
         </motion.div>
@@ -208,15 +209,48 @@ function Settings() {
                   <label className="block text-sm font-medium text-gray-400 mb-2">
                     Expertise & Interests
                   </label>
-                  <select className="w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue" multiple size={3}>
-                    <option value="ai" selected>AI & Machine Learning</option>
-                    <option value="sustainability" selected>Sustainability</option>
-                    <option value="web3" selected>Web3</option>
-                    <option value="mobile">Mobile Development</option>
-                    <option value="iot">IoT</option>
-                    <option value="fintech">FinTech</option>
-                  </select>
-                  <p className="text-xs text-gray-400 mt-1">Hold Ctrl/Cmd to select multiple areas</p>
+                  <div className="space-y-2 max-h-52 overflow-y-auto p-2 rounded-md bg-gray-800 border border-gray-700">
+                    {[
+                      { value: 'ai', label: 'AI & Machine Learning' },
+                      { value: 'sustainability', label: 'Sustainability' },
+                      { value: 'web3', label: 'Web3' },
+                      { value: 'mobile', label: 'Mobile Development' },
+                      { value: 'iot', label: 'IoT' },
+                      { value: 'fintech', label: 'FinTech' }
+                    ].map(option => (
+                      <div 
+                        key={option.value}
+                        className={`flex items-center p-2 rounded cursor-pointer transition-colors ${
+                          interests.includes(option.value) 
+                            ? 'bg-accent-blue bg-opacity-30 border border-accent-blue/50' 
+                            : 'hover:bg-gray-700'
+                        }`}
+                        onClick={() => {
+                          setInterests(prev => 
+                            prev.includes(option.value)
+                              ? prev.filter(e => e !== option.value)
+                              : [...prev, option.value]
+                          );
+                        }}
+                      >
+                        <div className={`flex-shrink-0 mr-2 w-5 h-5 rounded-sm border ${
+                          interests.includes(option.value) 
+                            ? 'border-accent-blue bg-accent-blue' 
+                            : 'border-gray-600'
+                        } flex items-center justify-center`}>
+                          {interests.includes(option.value) && (
+                            <Check size={14} className="text-white" />
+                          )}
+                        </div>
+                        <span className={`text-sm ${
+                          interests.includes(option.value) 
+                            ? 'text-white font-medium' 
+                            : 'text-gray-300'
+                        }`}>{option.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1">Click on an area to select or deselect it</p>
                 </div>
 
                 <div>

@@ -56,6 +56,13 @@ export function SponsorsGridSection({
       website: 'https://netlify.com'
     },
     {
+      id: '9',
+      name: 'StackBlitz',
+      logo: STACKBLITZ,
+      tier: 'gold',
+      website: 'https://stackblitz.com'
+    },
+    {
       id: '5',
       name: 'Cloudflare',
       logo: CLOUDFLARE,
@@ -68,7 +75,22 @@ export function SponsorsGridSection({
       logo: PADDLE,
       tier: 'silver',
       website: 'https://paddle.com'
-    }
+    },
+
+    {
+      id: '7',
+      name: 'StackBlitz',
+      logo: STACKBLITZ,
+      tier: 'silver',
+      website: 'https://stackblitz.com'
+    },
+    {
+      id: '8',
+      name: 'Bolt.new',
+      logo: BOLT,
+      tier: 'silver',
+      website: 'https://bolt.new'
+    },
   ]
 }: SponsorsGridSectionProps) {
   
@@ -79,7 +101,7 @@ export function SponsorsGridSection({
   const silverSponsors = sponsors.filter(s => s.tier === 'silver');
   
   return (
-    <div id="sponsors" className="py-20 bg-background-secondary">
+    <div id="sponsors" className="py-20 bg-gradient-to-b from-background-secondary to-[#252A34]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -31,7 +31,7 @@ export function JudgeRecruitmentSection({
   const navigate = useNavigate();
   
   return (
-    <div id="judges" className="py-20">
+    <div id="judges" className="py-20 bg-[#1A294F]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <motion.div
@@ -65,7 +65,7 @@ export function JudgeRecruitmentSection({
             transition={{ duration: 0.4, delay: 0.2 }}
             className="relative hidden md:block"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-accent-blue to-accent-purple opacity-20 rounded-xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#3B82F6] to-[#3F72E5] opacity-20 rounded-xl"></div>
             <img 
               src={imageSrc} 
               alt="Judges evaluating projects" 

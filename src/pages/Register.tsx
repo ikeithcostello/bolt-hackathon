@@ -72,16 +72,16 @@ function Register() {
     e.preventDefault();
     
     if (validateForm()) {
-      // In a real app, you would send this data to your server for registration
-      console.log('Registration submitted:', formData);
-      
-      // Redirect to login or dashboard
+      // In a real application, you would submit the form data to your server here
+      console.log('Form submitted:', formData);
       navigate('/login');
+    } else {
+      console.log('Form validation failed');
     }
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
+    <div className="min-h-screen py-10 flex flex-col justify-center relative">
       {/* Background with gradient overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center"
@@ -92,36 +92,37 @@ function Register() {
       ></div>
       <div className="absolute inset-0 bg-gradient-to-b from-background-primary/95 via-background-primary/85 to-background-primary"></div>
       
-      {/* Back button */}
+      {/* Back to home */}
       <Link 
         to="/" 
-        className="absolute top-6 left-6 z-10 flex items-center text-gray-400 hover:text-white transition-colors"
+        className="absolute top-4 left-4 md:top-6 md:left-6 z-10 flex items-center text-gray-400 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-5 h-5 mr-2" />
-        <span>Back to Home</span>
+        <span className="hidden sm:inline">Back to Home</span>
+        <span className="sm:hidden">Back</span>
       </Link>
       
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-xl w-full mx-auto relative z-10 px-4 py-12"
+        className="max-w-xl w-full mx-auto relative z-10 px-4 py-6 sm:py-12"
       >
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="flex items-center justify-center mb-2">
-            <Zap className="text-[#43AFFF] w-8 h-8 mr-2" />
-            <h1 className="text-4xl font-bold text-white">The World's Largest Hackathon</h1>
+            <Zap className="text-[#43AFFF] w-6 h-6 sm:w-8 sm:h-8 mr-2" />
+            <h1 className="text-2xl sm:text-4xl font-bold text-white">The World's Largest Hackathon</h1>
           </div>
-          <h2 className="text-2xl font-semibold text-white mb-2">Hackathon Registration</h2>
-          <p className="text-gray-300 max-w-md mx-auto">
+          <h2 className="text-xl sm:text-2xl font-semibold text-white mb-2">Hackathon Registration</h2>
+          <p className="text-sm sm:text-base text-gray-300 max-w-md mx-auto">
             Join thousands of developers and compete for $1M in prizes in the world's largest hackathon
           </p>
         </div>
 
-        <div className="bg-background-primary/70 backdrop-blur-md p-8 rounded-lg shadow-2xl border border-white/10">
-          <form onSubmit={handleSubmit}>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="md:col-span-2">
+        <div className="bg-background-primary/70 backdrop-blur-md p-4 sm:p-8 rounded-lg shadow-2xl border border-white/10">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            <div className="space-y-4 sm:space-y-6">
+              <div>
                 <label htmlFor="teamName" className="block text-sm font-medium text-gray-400 mb-1">
                   Team Name
                 </label>
@@ -137,7 +138,7 @@ function Register() {
                 {errors.teamName && <p className="mt-1 text-sm text-accent-red">{errors.teamName}</p>}
               </div>
               
-              <div className="md:col-span-2">
+              <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-1">
                   Email Address
                 </label>
@@ -167,14 +168,14 @@ function Register() {
                     name="password"
                     type={showPassword ? "text" : "password"}
                     className={`w-full pl-10 pr-10 py-2 rounded-md bg-gray-800/80 border ${errors.password ? 'border-accent-red' : 'border-gray-700'} text-white focus:outline-none focus:ring-2 focus:ring-accent-blue`}
-                    placeholder="Create a secure password"
+                    placeholder="Create a password (min. 8 characters)"
                     value={formData.password}
                     onChange={handleChange}
                   />
                   <button
                     type="button"
+                    className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-300 focus:outline-none"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-300"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -193,72 +194,61 @@ function Register() {
                     name="confirmPassword"
                     type={showPassword ? "text" : "password"}
                     className={`w-full pl-10 pr-4 py-2 rounded-md bg-gray-800/80 border ${errors.confirmPassword ? 'border-accent-red' : 'border-gray-700'} text-white focus:outline-none focus:ring-2 focus:ring-accent-blue`}
-                    placeholder="Confirm your password"
+                    placeholder="Re-enter your password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                   />
                 </div>
                 {errors.confirmPassword && <p className="mt-1 text-sm text-accent-red">{errors.confirmPassword}</p>}
               </div>
-
-              <div className="md:col-span-2">
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="acceptTerms"
-                      name="acceptTerms"
-                      type="checkbox"
-                      checked={formData.acceptTerms}
-                      onChange={handleChange}
-                      className="w-4 h-4 rounded bg-gray-700 border-gray-600 text-accent-blue focus:ring-accent-blue focus:ring-opacity-25"
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <label htmlFor="acceptTerms" className="text-sm text-gray-300">
-                      I agree to the <Link to="#" className="text-accent-blue hover:underline">Terms of Service</Link> and <Link to="#" className="text-accent-blue hover:underline">Privacy Policy</Link>
-                    </label>
-                    {errors.acceptTerms && <p className="mt-1 text-sm text-accent-red">{errors.acceptTerms}</p>}
-                  </div>
-                </div>
+              
+              <div className="flex items-start">
+                <input
+                  id="acceptTerms"
+                  name="acceptTerms"
+                  type="checkbox"
+                  className="h-4 w-4 mt-1 rounded border-gray-700 text-accent-blue focus:ring-accent-blue"
+                  checked={formData.acceptTerms}
+                  onChange={handleChange}
+                />
+                <label htmlFor="acceptTerms" className="ml-2 block text-sm text-gray-300">
+                  I agree to the <Link to="/terms" className="text-accent-blue hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-accent-blue hover:underline">Privacy Policy</Link>
+                </label>
               </div>
+              {errors.acceptTerms && <p className="mt-1 text-sm text-accent-red">{errors.acceptTerms}</p>}
             </div>
             
-            <div className="mt-8">
-              <Button 
-                type="submit"
-                className="w-full bg-[#43AFFF] hover:bg-[#3a9ee6]"
-              >
-                Create Account
+            <div className="pt-2">
+              <Button type="submit" className="w-full py-2" size="lg">
+                Register Now
               </Button>
             </div>
             
-            <div className="relative flex items-center justify-center mt-6 mb-6">
-              <div className="border-t border-gray-700 absolute w-full"></div>
-              <div className="bg-transparent px-4 relative z-10 text-sm text-gray-400">or continue with</div>
+            <div className="relative py-3">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-700"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-background-primary/70 text-gray-400">or continue with</span>
+              </div>
             </div>
             
             <Button 
-              type="button"
-              variant="outline"
-              className="w-full flex items-center justify-center mb-6"
-              leftIcon={<Github size={18} />}
+              type="button" 
+              variant="outline" 
+              className="w-full" 
+              leftIcon={<Github className="w-5 h-5" />}
             >
-              Sign up with GitHub
+              GitHub
             </Button>
             
-            <div className="text-center text-sm text-gray-400">
+            <div className="text-center mt-4 text-gray-400 text-sm">
               Already have an account?{' '}
-              <Link to="/login" className="text-[#43AFFF] hover:text-[#3a9ee6] hover:underline">
-                Sign in
+              <Link to="/login" className="text-accent-blue hover:underline">
+                Log in
               </Link>
             </div>
           </form>
-        </div>
-
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500 mt-4">
-            By signing up, you'll get access to The World's Largest Hackathon's tools and cloud development environment
-          </p>
         </div>
       </motion.div>
     </div>

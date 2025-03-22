@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
+import { useAppStore } from '@/store';
 import { 
   Bell, 
   LayoutGrid, 
@@ -16,11 +17,13 @@ import {
   Star,
   Check,
   X,
-  AlertCircle
+  AlertCircle,
+  Trash,
+  Tag
 } from 'lucide-react';
 
 // Define the possible settings sections
-type SettingsSection = 'general' | 'security' | 'notifications' | 'appearance' | 'integrations' | 'users' | 'criteria';
+type SettingsSection = 'general' | 'security' | 'notifications' | 'appearance' | 'integrations' | 'users' | 'criteria' | 'categories';
 
 // Define the criteria type options
 type CriteriaType = 'numeric' | 'checkbox' | 'text';
@@ -42,9 +45,133 @@ interface Criterion {
   };
 }
 
+// CategoryManagementModal Component
+interface CategoryManagementModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  categories: string[];
+  onSave: (categories: string[]) => void;
+}
+
+function CategoryManagementModal({
+  isOpen,
+  onClose,
+  title,
+  categories,
+  onSave
+}: CategoryManagementModalProps) {
+  const [editedCategories, setEditedCategories] = useState<string[]>([...categories]);
+  const [newCategory, setNewCategory] = useState('');
+  
+  if (!isOpen) return null;
+  
+  const handleAddCategory = () => {
+    if (newCategory.trim() === '') return;
+    setEditedCategories([...editedCategories, newCategory.trim()]);
+    setNewCategory('');
+  };
+  
+  const handleRemoveCategory = (index: number) => {
+    const updatedCategories = [...editedCategories];
+    updatedCategories.splice(index, 1);
+    setEditedCategories(updatedCategories);
+  };
+  
+  const handleSave = () => {
+    onSave(editedCategories);
+    onClose();
+  };
+  
+  return (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="bg-gray-900 rounded-lg shadow-xl w-full max-w-md">
+        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+          <h2 className="text-lg font-semibold">{title}</h2>
+          <button 
+            onClick={onClose}
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="p-4">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Add New Category
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                className="flex-1 px-3 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="New category..."
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleAddCategory();
+                }}
+              />
+              <Button 
+                onClick={handleAddCategory}
+                className="px-3 py-2"
+              >
+                Add
+              </Button>
+            </div>
+          </div>
+          
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Current Categories
+          </label>
+          
+          <div className="space-y-2 max-h-60 overflow-y-auto mb-4">
+            {editedCategories.map((category, index) => (
+              <div key={index} className="flex items-center justify-between p-2 bg-gray-800 rounded">
+                <span>{category}</span>
+                <button 
+                  onClick={() => handleRemoveCategory(index)}
+                  className="text-red-400 hover:text-red-300 transition-colors"
+                >
+                  <Trash size={16} />
+                </button>
+              </div>
+            ))}
+            {editedCategories.length === 0 && (
+              <p className="text-gray-500 text-sm p-2">No categories added yet.</p>
+            )}
+          </div>
+          
+          <div className="flex justify-end gap-2 mt-4">
+            <Button 
+              variant="outline" 
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleSave}
+            >
+              Save Changes
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Settings() {
   // State to track the active settings section
   const [activeSection, setActiveSection] = useState<SettingsSection>('general');
+  
+  // Get categories from app store
+  const { 
+    projectCategories, 
+    evaluationCategories, 
+    updateProjectCategories, 
+    updateEvaluationCategories 
+  } = useAppStore();
   
   // State for criteria management
   const [criteria, setCriteria] = useState<Criterion[]>([
@@ -127,6 +254,18 @@ function Settings() {
     'Technical', 'Design', 'Completion', 'Documentation', 'Impact', 'Presentation'
   ]);
   
+  // State for new project category
+  const [newProjectCategory, setNewProjectCategory] = useState('');
+  
+  // State for new evaluation category
+  const [newEvaluationCategory, setNewEvaluationCategory] = useState('');
+  
+  // State for modal management
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalCategories, setModalCategories] = useState<string[]>([]);
+  const [categoryType, setCategoryType] = useState<'project' | 'evaluation'>('project');
+  
   // Function to handle navigation item clicks
   const handleNavClick = (section: SettingsSection) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -193,6 +332,61 @@ function Settings() {
       setCategories([...categories, category]);
     }
   };
+  
+  // Function to add a new project category
+  const handleAddProjectCategory = () => {
+    if (newProjectCategory && !projectCategories.includes(newProjectCategory)) {
+      const updatedCategories = [...projectCategories, newProjectCategory];
+      updateProjectCategories(updatedCategories);
+      setNewProjectCategory('');
+    }
+  };
+  
+  // Function to remove a project category
+  const handleRemoveProjectCategory = (index: number) => {
+    const newCategories = projectCategories.filter((_, i) => i !== index);
+    updateProjectCategories(newCategories);
+  };
+  
+  // Function to add a new evaluation category
+  const handleAddEvaluationCategory = () => {
+    if (newEvaluationCategory && !evaluationCategories.includes(newEvaluationCategory)) {
+      const updatedCategories = [...evaluationCategories, newEvaluationCategory];
+      updateEvaluationCategories(updatedCategories);
+      setNewEvaluationCategory('');
+    }
+  };
+  
+  // Function to remove an evaluation category
+  const handleRemoveEvaluationCategory = (index: number) => {
+    const newCategories = evaluationCategories.filter((_, i) => i !== index);
+    updateEvaluationCategories(newCategories);
+  };
+
+  // Function to open modal for project categories
+  const openProjectCategoriesModal = () => {
+    setModalTitle('Manage Project Categories');
+    setModalCategories(projectCategories);
+    setCategoryType('project');
+    setShowCategoryModal(true);
+  };
+  
+  // Function to open modal for evaluation categories
+  const openEvaluationCategoriesModal = () => {
+    setModalTitle('Manage Evaluation Categories');
+    setModalCategories(evaluationCategories);
+    setCategoryType('evaluation');
+    setShowCategoryModal(true);
+  };
+  
+  // Function to save categories from modal
+  const handleSaveModalCategories = (categories: string[]) => {
+    if (categoryType === 'project') {
+      updateProjectCategories(categories);
+    } else {
+      updateEvaluationCategories(categories);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -242,6 +436,16 @@ function Settings() {
                   >
                     <Star className="mr-2" size={18} />
                     <span>Evaluation Criteria</span>
+                  </a>
+                </li>
+                <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'categories' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
+                  <a 
+                    href="#" 
+                    onClick={handleNavClick('categories')}
+                    className={`flex items-center ${activeSection === 'categories' ? 'text-accent-blue' : 'text-gray-300 hover:text-white'}`}
+                  >
+                    <Tag className="mr-2" size={18} />
+                    <span>Project Categories</span>
                   </a>
                 </li>
                 <li className={`p-4 hover:bg-gray-800 transition-colors ${activeSection === 'security' ? 'bg-accent-blue bg-opacity-20 border-l-4 border-accent-blue' : ''}`}>
@@ -1138,8 +1342,152 @@ function Settings() {
             </CardContent>
           </Card>
           )}
+
+          {/* Categories Section */}
+          {activeSection === 'categories' && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Tag className="mr-2" size={20} />
+                  Project Categories Management
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium">Project Categories</h3>
+                    <Button 
+                      onClick={openProjectCategoriesModal}
+                      size="sm"
+                      variant="outline"
+                      className="text-sm px-2 py-1 h-8 inline-flex items-center gap-1.5"
+                    >
+                      <Edit size={14} aria-hidden="true" />
+                      <span>Manage in Modal</span>
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-400 mb-4">
+                    Project categories are used to classify submissions and appear in heatmaps, reports, and evaluation forms throughout the system.
+                  </p>
+
+                  
+                  <div className="mb-6">
+                    <div className="flex gap-2 mb-3">
+                      <input
+                        type="text"
+                        className="flex-1 px-3 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                        placeholder="New category..."
+                        value={newProjectCategory}
+                        onChange={(e) => setNewProjectCategory(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleAddProjectCategory();
+                        }}
+                      />
+                      <Button 
+                        onClick={handleAddProjectCategory}
+                        size="sm"
+                      >
+                        <Plus size={16} className="mr-1" />
+                        Add
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-2 max-h-96 overflow-y-auto border border-gray-800 rounded-md p-2">
+                      {projectCategories.length === 0 ? (
+                        <p className="text-gray-400 text-sm p-2">No project categories defined yet.</p>
+                      ) : (
+                        projectCategories.map((category, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 bg-gray-800 rounded">
+                            <span className="flex-1">{category}</span>
+                            <button 
+                              onClick={() => handleRemoveProjectCategory(index)}
+                              className="text-red-400 hover:text-red-300 transition-colors ml-2"
+                            >
+                              <Trash size={16} />
+                            </button>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium">Evaluation Criteria Categories</h3>
+                    <Button 
+                      onClick={openEvaluationCategoriesModal}
+                      size="sm"
+                      variant="outline"
+                      className="text-sm px-2 py-1 h-8 inline-flex items-center gap-1.5"
+                    >
+                      <Edit size={14} aria-hidden="true" />
+                      <span>Manage in Modal</span>
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-400 mb-4">
+                    These categories are used to organize evaluation criteria and are referenced when judges submit scores and feedback.
+                  </p>
+                  
+                  <div>
+                    <div className="flex gap-2 mb-3">
+                      <input
+                        type="text"
+                        className="flex-1 px-3 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-accent-blue"
+                        placeholder="New evaluation category..."
+                        value={newEvaluationCategory}
+                        onChange={(e) => setNewEvaluationCategory(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleAddEvaluationCategory();
+                        }}
+                      />
+                      <Button 
+                        onClick={handleAddEvaluationCategory}
+                        size="sm"
+                      >
+                        <Plus size={16} className="mr-1" />
+                        Add
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-2 max-h-96 overflow-y-auto border border-gray-800 rounded-md p-2">
+                      {evaluationCategories.length === 0 ? (
+                        <p className="text-gray-400 text-sm p-2">No evaluation categories defined yet.</p>
+                      ) : (
+                        evaluationCategories.map((category, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 bg-gray-800 rounded">
+                            <span className="flex-1">{category}</span>
+                            <button 
+                              onClick={() => handleRemoveEvaluationCategory(index)}
+                              className="text-red-400 hover:text-red-300 transition-colors ml-2"
+                            >
+                              <Trash size={16} />
+                            </button>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex justify-end">
+                  <Button>
+                    <Save size={16} className="mr-2" />
+                    Save Changes
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </motion.div>
       </div>
+
+      {/* Category Management Modal */}
+      <CategoryManagementModal
+        isOpen={showCategoryModal}
+        onClose={() => setShowCategoryModal(false)}
+        title={modalTitle}
+        categories={modalCategories}
+        onSave={handleSaveModalCategories}
+      />
     </div>
   );
 }

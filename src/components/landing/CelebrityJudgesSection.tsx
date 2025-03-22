@@ -32,16 +32,6 @@ export function CelebrityJudgesSection({
   subtitle = "Meet our distinguished panel of industry leaders who will evaluate the final round of submissions",
   judges = [
     {
-      name: "Evan You",
-      role: "Creator of Vue.js",
-      image: EVAN_YOU,
-      bio: "Creator of Vue.js, core contributor to React, and open source advocate with a passion for building developer tools that simplify web development.",
-      links: {
-        twitter: "https://twitter.com/youyuxi",
-        github: "https://github.com/yyx990803"
-      }
-    },
-    {
       name: "Pieter Levels",
       role: "Founder of Nomad List",
       image: PIETER_LEVELS,
@@ -70,11 +60,21 @@ export function CelebrityJudgesSection({
         twitter: "https://twitter.com/gregisenberg",
         website: "https://www.gregisenberg.com/"
       }
+    },
+    {
+      name: "Evan You",
+      role: "Creator of Vue.js",
+      image: EVAN_YOU,
+      bio: "Creator of Vue.js, core contributor to React, and open source advocate with a passion for building developer tools that simplify web development.",
+      links: {
+        twitter: "https://twitter.com/youyuxi",
+        github: "https://github.com/yyx990803"
+      }
     }
   ]
 }: CelebrityJudgesSectionProps) {
   return (
-    <div className="py-20 bg-gradient-to-b from-background-primary to-background-secondary">
+    <div className="py-20 bg-gradient-to-b from-[#20253D] to-[#1A294F]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -95,7 +95,7 @@ export function CelebrityJudgesSection({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
-              className="bg-background-secondary/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/5 shadow-xl"
+              className="bg-blue-900/30 backdrop-blur-sm rounded-xl overflow-hidden border border-white/5 shadow-xl"
             >
               <div className="relative aspect-square overflow-hidden">
                 <img 

@@ -2,7 +2,8 @@ import React from 'react';
 import { Avatar } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { LogOut, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppStore } from '../../store';
 
 interface HeaderProps {
   userName: string;
@@ -11,6 +12,14 @@ interface HeaderProps {
 }
 
 export function Header({ userName, userAvatar, role }: HeaderProps) {
+  const navigate = useNavigate();
+  const { logout } = useAppStore();
+  
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Navigate to the landing page
+  };
+
   return (
     <header className="bg-background-primary h-16 border-b border-gray-800 flex items-center justify-between px-6">
       <div className="flex items-center">
@@ -21,7 +30,12 @@ export function Header({ userName, userAvatar, role }: HeaderProps) {
             Profile
           </Button>
         </Link>
-        <Button variant="outline" size="sm" leftIcon={<LogOut size={16} />}>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          leftIcon={<LogOut size={16} />}
+          onClick={handleLogout}
+        >
           Logout
         </Button>
         <Avatar name={userName} src={userAvatar} />

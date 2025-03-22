@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Github, Linkedin, Instagram, X } from 'lucide-react';
 
 interface FooterProps {
   brandName?: string;
@@ -24,7 +24,7 @@ export function Footer({
   ],
   socialLinks = [
     { name: "Github", icon: <Github size={20} />, path: "#" },
-    { name: "Twitter", icon: <Twitter size={20} />, path: "#" },
+    { name: "X", icon: <X size={20} />, path: "#" },
     { name: "LinkedIn", icon: <Linkedin size={20} />, path: "#" },
     { name: "Instagram", icon: <Instagram size={20} />, path: "#" }
   ],

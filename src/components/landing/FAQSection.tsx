@@ -43,7 +43,7 @@ export function FAQSection({
   ]
 }: FAQSectionProps) {
   return (
-    <div id="faq" className="py-20 bg-background-secondary">
+    <div id="faq" className="py-20 bg-gradient-to-b from-[#1E2A3D] to-[#1A294F]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -64,7 +64,7 @@ export function FAQSection({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
-              className="bg-gray-800 p-6 rounded-lg"
+              className="bg-gradient-to-br from-gray-800/90 to-blue-800/30 p-6 rounded-lg border border-blue-800/20"
             >
               <h3 className="text-xl font-semibold mb-2">{faq.question}</h3>
               <p className="text-gray-300">{faq.answer}</p>
